@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="en-US" original="ETax">
+    <body>
+      <group id="body">
+        <trans-unit id="Table 1749376159 - Field 527369215 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>API Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table DSVCEtaxApi Setup - Field DSVC API Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1749376159 - Field 206856747 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>API Value</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table DSVCEtaxApi Setup - Field DSVC API Value - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1749376159 - Field 1586664859 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Entry No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table DSVCEtaxApi Setup - Field DSVC Entry No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1749376159 - Field 3325374948 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remark</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table DSVCEtaxApi Setup - Field DSVC Remark - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2592509426 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Etax Setup</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page DSVCEtaxSetups - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2592509426 - Control 3325374948 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remark</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page DSVCEtaxSetups - Control DSVC Remark - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2592509426 - Control 1430555543 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>API Field Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page DSVCEtaxSetups - Control DSVCAPI Name - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2592509426 - Control 1541963027 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>API Value</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page DSVCEtaxSetups - Control DSVCAPI Value - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2592509426 - Action 4166863823 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Insert Api Template</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page DSVCEtaxSetups - Action DSVC InsertTemplateApi - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2592509426 - Action 3419579302 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Add Template Api Setup</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page DSVCEtaxSetups - Action DSVC Template - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2592509426 - Action 3419579302 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>API Template</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page DSVCEtaxSetups - Action DSVC Template - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2927157837 - Property 2019332006" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4034894651">
+          <source>New,Process,Report,Approve,Posting,Prepare,Invoice,Release,Request Approval,View,Navigate,E-Tax</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension DSVC SalesInvoice - Property PromotedActionCategories</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2927157837 - Action 2763584958 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4034894651">
+          <source>Send Etax</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension DSVC SalesInvoice - Action DSVCETax - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2927157837 - Action 2763584958 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4034894651">
+          <source>E-Tax</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension DSVC SalesInvoice - Action DSVCETax - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 4080684739 - Control 2753863965 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3469146285">
+          <source>Branch Code for E-Tax</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension DSVCCompnayInformation - Control DSVC Etax Branch Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 570167362 - Control 3987284359 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4145206282">
+          <source>E-Tax Setup</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension DSVCSales Setups - Control DSVCEtaxSetup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 570167362 - Control 3972472595 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4145206282">
+          <source>URL Address for api</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension DSVCSales Setups - Control DSVC URL - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3070124235 - Field 2753863965 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3469146285">
+          <source>E-tax Branch Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCCompanyInformation - Field DSVC Etax Branch Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 722789714 - Field 40042362 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 552782286">
+          <source>E-Tax FileName</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCPostedSales CN - Field DSVC E-Tax FileName - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 722789714 - Field 4043398264 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 552782286">
+          <source>Generate E-Tax</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCPostedSales CN - Field DSVC Generate E-Tax - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 722789714 - Field 999934257 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 552782286">
+          <source>Generate E-Tax By</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCPostedSales CN - Field DSVC Generate E-Tax by - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 722789714 - Field 1346455871 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 552782286">
+          <source>Generate E-Tax DateTime</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCPostedSales CN - Field DSVC Generate E-Tax DateTime - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1379585894 - Field 40042362 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 809936682">
+          <source>E-Tax FileName</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCPostedSalesInvoice - Field DSVC E-Tax FileName - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1379585894 - Field 4043398264 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 809936682">
+          <source>Generate E-Tax</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCPostedSalesInvoice - Field DSVC Generate E-Tax - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1379585894 - Field 999934257 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 809936682">
+          <source>Generate E-Tax By</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCPostedSalesInvoice - Field DSVC Generate E-Tax by - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1379585894 - Field 1346455871 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 809936682">
+          <source>Generate E-Tax DateTime</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCPostedSalesInvoice - Field DSVC Generate E-Tax DateTime - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3720511543 - Field 40042362 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1192395785">
+          <source>E-Tax FileName</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCSales Header - Field DSVC E-Tax FileName - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3720511543 - Field 4043398264 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1192395785">
+          <source>Generate E-Tax</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCSales Header - Field DSVC Generate E-Tax - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3720511543 - Field 999934257 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1192395785">
+          <source>Generate E-Tax By</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCSales Header - Field DSVC Generate E-Tax by - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3720511543 - Field 1346455871 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1192395785">
+          <source>Generate E-Tax DateTime</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCSales Header - Field DSVC Generate E-Tax DateTime - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 468549535 - Field 3972472595 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4145206282">
+          <source>E-Tax URL</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension DSVCSalesSetup - Field DSVC URL - Property Caption</note>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>
