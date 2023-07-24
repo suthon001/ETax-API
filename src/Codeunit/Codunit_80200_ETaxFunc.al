@@ -271,21 +271,21 @@ codeunit 80200 "NCT ETaxFunc"
             ltOutStream.WriteText(EtaxData);
             ltTempblob.CreateInStream(ltInStream, TextEncoding::UTF8);
             if CallEtaxWebservice(0, pSalesInvHeader."No.", ToFileName, EtaxData, ltInStream, Format(NoSeries."NCT Etax Type Code")) then begin
-                pSalesInvHeader."NCT Etax Send to E-Tax" := true;
-                pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
-                pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
-                pSalesInvHeader."NCT Etax Send DateTime" := CurrentDateTime();
-                pSalesInvHeader."NCT Etax No. of Send" := pSalesInvHeader."NCT Etax No. of Send" + 1;
-                pSalesInvHeader."NCT Etax Status" := pSalesInvHeader."NCT Etax Status"::Completely;
-                pSalesInvHeader.Modify();
+                // pSalesInvHeader."NCT Etax Send to E-Tax" := true;
+                // pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
+                // pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
+                // pSalesInvHeader."NCT Etax Send DateTime" := CurrentDateTime();
+                // pSalesInvHeader."NCT Etax No. of Send" := pSalesInvHeader."NCT Etax No. of Send" + 1;
+                // pSalesInvHeader."NCT Etax Status" := pSalesInvHeader."NCT Etax Status"::Completely;
+                // pSalesInvHeader.Modify();
             end else begin
-                pSalesInvHeader."NCT Etax Send to E-Tax" := false;
-                pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
-                pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
-                pSalesInvHeader."NCT Etax Send DateTime" := CurrentDateTime();
-                pSalesInvHeader."NCT Etax No. of Send" := pSalesInvHeader."NCT Etax No. of Send" + 1;
-                pSalesInvHeader."NCT Etax Status" := pSalesInvHeader."NCT Etax Status"::Fail;
-                pSalesInvHeader.Modify();
+                // pSalesInvHeader."NCT Etax Send to E-Tax" := false;
+                // pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
+                // pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
+                // pSalesInvHeader."NCT Etax Send DateTime" := CurrentDateTime();
+                // pSalesInvHeader."NCT Etax No. of Send" := pSalesInvHeader."NCT Etax No. of Send" + 1;
+                // pSalesInvHeader."NCT Etax Status" := pSalesInvHeader."NCT Etax Status"::Fail;
+                // pSalesInvHeader.Modify();
             end;
             //  CreateLogEtax(pSalesInvHeader."NCT Etax Status");
         end;
@@ -384,6 +384,7 @@ codeunit 80200 "NCT ETaxFunc"
         TempEtaxLog."Last Pdf File".ImportStream(ltDocumentInStream, pFileName + '.pdf');
         TempEtaxLog."Last Text File".ImportStream(pInstream, pFileName + '.txt');
         TempEtaxLog."Etax Type" := COPYSTR(pEtaxType, 1, 250);
+        TempEtaxLog."File Name" := COPYSTR(pFileName, 1, 100);
         TempEtaxLog."Create By" := CopyStr(UserId, 1, 50);
         TempEtaxLog."Create DateTime" := CurrentDateTime();
         TempEtaxLog.Insert();
@@ -435,7 +436,7 @@ codeunit 80200 "NCT ETaxFunc"
             TempBlob.CreateOutStream(DocumentOutStream);
             CopyStream(DocumentOutStream, DocumentInStream);
             ToBase64_pdf := Base64Convert.ToBase64(DocumentInStream);
-            FileMgt.BLOBExport(TempBlob, PdfFileName, true);
+            FileMgt.BLOBExport(TempBlob, TextFileName, true);
         end;
 
 

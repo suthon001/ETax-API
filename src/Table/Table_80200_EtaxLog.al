@@ -46,6 +46,10 @@ table 80200 "NCT Etax Log"
         {
             Caption = 'Last Text File';
         }
+        field(10; "File Name"; text[100])
+        {
+            Caption = 'File Name';
+        }
 
     }
     keys
