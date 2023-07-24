@@ -282,7 +282,12 @@ codeunit 80200 "NCT ETaxFunc"
         end;
     end;
 
-
+    /// <summary>
+    /// SetDataEtax.
+    /// </summary>
+    /// <param name="EtaxValue">Text.</param>
+    /// <param name="pComma">boolean.</param>
+    /// <returns>Return value of type Text.</returns>
     local procedure SetDataEtax(EtaxValue: Text; pComma: boolean): Text
     begin
         EtaxValue := DelChr(EtaxValue, '=', '"''');
@@ -291,13 +296,42 @@ codeunit 80200 "NCT ETaxFunc"
         else
             exit(StrSubstNo(DataTextLbl, EtaxValue));
     end;
+    /// <summary>
+    /// CreatePDFReport.
+    /// </summary>
+    /// <param name="pDocumentType">Option "Sales Invoice","Sales Credit Memo","Sales Receipt".</param>
+    /// <param name="pNo">code[30].</param>
+    local procedure CreatePDFReport(pDocumentType: Option "Sales Invoice","Sales Credit Memo","Sales Receipt"; pNo: code[30]; pInstream: InStream; pFileName: Text)
+    var
+        SaleInvH: Record "Sales Invoice Header";
+        TempBlob: Codeunit "Temp Blob";
+        SalesInvReport: Report "NCT Sales Invoice (Post)";
+        ltDocumentOutStream: OutStream;
+        ltDocumentInStream: InStream;
+    begin
+        if pDocumentType = pDocumentType::"Sales Invoice" then begin
+            SaleInvH.Reset();
+            SaleInvH.SetRange("No.", pNo);
+            Clear(TempBlob);
+            TempBlob.CreateOutStream(ltDocumentOutStream, TextEncoding::UTF8);
+            Clear(SalesInvReport);
+            SalesInvReport.SetTableView(SaleInvH);
+            SalesInvReport.SaveAs('', ReportFormat::Pdf, ltDocumentOutStream);
+            TempBlob.CreateInStream(ltDocumentInStream, TextEncoding::UTF8);
+            TempEtaxLog.Init();
+            TempEtaxLog."Entry No." := 1;
+            TempEtaxLog."Last Pdf File".ImportStream(ltDocumentInStream, pFileName + '.pdf');
+            TempEtaxLog."Last Text File".ImportStream(pInstream, pFileName + '.txt');
+            TempEtaxLog.Insert();
+        end;
+    end;
 
     [TryFunction]
     local procedure CallEtaxWebservice(pDocumentType: Option "Sales Invoice","Sales Credit Memo","Sales Receipt"; pNo: code[30]; pfilename: text; pTextData: text; pInstream: InStream)
     var
-        SaleInvH: Record "Sales Invoice Header";
         TempBlob: Codeunit "Temp Blob";
         Base64Convert: Codeunit "Base64 Convert";
+        FileMgt: Codeunit "File Management";
         PayloadOutStream: OutStream;
         PayloadInStream: InStream;
         UrlAddress: Text[1024];
@@ -305,10 +339,10 @@ codeunit 80200 "NCT ETaxFunc"
         LF: Char;
         NewLine, ToBase64_pdf, ToBase64_txt : Text;
         SelectDataDownload: array[2] of Text;
-        DocumentOutStream: OutStream;
         DocumentInStream: InStream;
-        SalesInvReport: Report "NCT Sales Invoice (Post)";
+        DocumentOutStream: OutStream;
         PdfFileName, TextFileName : Text;
+        TenantMedia: Record "Tenant Media";
 
     begin
         CR := 13;
@@ -317,78 +351,85 @@ codeunit 80200 "NCT ETaxFunc"
         CLEAR(SelectDataDownload);
         CLEAR(PayloadOutStream);
         CLEAR(PayloadInStream);
-        TextFileName := pfilename + '.txt';
-        PdfFileName := pfilename + '.pdf';
-        if pDocumentType = pDocumentType::"Sales Invoice" then begin
-            SaleInvH.Reset();
-            SaleInvH.SetRange("No.", pNo);
-            Clear(TempBlob);
-            TempBlob.CreateOutStream(DocumentOutStream, TextEncoding::UTF8);
-            Clear(SalesInvReport);
-            SalesInvReport.SetTableView(SaleInvH);
-            SalesInvReport.SaveAs('', ReportFormat::Pdf, DocumentOutStream);
-            TempBlob.CreateInStream(DocumentInStream, TextEncoding::UTF8);
-
-
-        end;
         Clear(ToBase64_pdf);
         CLEAR(ToBase64_txt);
-        ToBase64_pdf := Base64Convert.ToBase64(DocumentInStream);
+        TextFileName := pfilename + '.txt';
+        PdfFileName := pfilename + '.pdf';
+
         ToBase64_txt := Base64Convert.ToBase64(pTextData);
 
-        UrlAddress := SalesReceivablesSetup."NCT Etax Service URL";
-        DSVCHttpContent.GetHeaders(HttpHeadersContent);
-
-        HttpHeadersContent.Clear();
-        HttpHeadersContent.Add('Content-Type', 'multipart/form-data;boundary=D365BC');
-        TempBlob.CreateOutStream(PayloadOutStream);
-
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
-        PayloadOutStream.WriteText('Content-Disposition: form-data; name="SellerTaxId"' + NewLine);
-        PayloadOutStream.WriteText(NewLine);
-        PayloadOutStream.WriteText(SalesReceivablesSetup."NCT Etax Seller Tax ID" + NewLine);
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
-
-        PayloadOutStream.WriteText('Content-Disposition: form-data; name="SellerBranchId"' + NewLine);
-        PayloadOutStream.WriteText(NewLine);
-        PayloadOutStream.WriteText(SalesReceivablesSetup."NCT Etax Seller Branch ID" + NewLine);
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
-
-        PayloadOutStream.WriteText('Content-Disposition: form-data; name="UserCode"' + NewLine);
-        PayloadOutStream.WriteText(NewLine);
-        PayloadOutStream.WriteText(SalesReceivablesSetup."NCT Etax User Code" + NewLine);
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
-
-        PayloadOutStream.WriteText('Content-Disposition: form-data; name="AccessKey"' + NewLine);
-        PayloadOutStream.WriteText(NewLine);
-        PayloadOutStream.WriteText(SalesReceivablesSetup."NCT Etax Access Key" + NewLine);
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
-
-        PayloadOutStream.WriteText('Content-Disposition: form-data; name="ServiceCode"' + NewLine);
-        PayloadOutStream.WriteText(NewLine);
-        PayloadOutStream.WriteText(Format(SalesReceivablesSetup."NCT Etax Service Code") + NewLine);
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
-
-        PayloadOutStream.WriteText('Content-Disposition: form-data; name="APIKey"' + NewLine);
-        PayloadOutStream.WriteText(NewLine);
-        PayloadOutStream.WriteText(SalesReceivablesSetup.GetBlobData_APIKey() + NewLine);
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
 
 
-        PayloadOutStream.WriteText('Content-Disposition: form-data; name="TextContent"' + NewLine);
-        PayloadOutStream.WriteText(NewLine);
-        PayloadOutStream.WriteText(ToBase64_txt + NewLine);
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
+        CreatePDFReport(pDocumentType, pNo, pInstream, pfilename);
 
 
-        PayloadOutStream.WriteText('Content-Disposition: form-data; name="PDFContent"' + NewLine);
-        PayloadOutStream.WriteText(NewLine);
-        PayloadOutStream.WriteText(ToBase64_pdf + NewLine);
-        PayloadOutStream.WriteText('--D365BC--' + NewLine);
+        Clear(TempBlob);
+        TempEtaxLog.reset();
+        TenantMedia.GET(TempEtaxLog."Last Pdf File".Item(1));
+        TenantMedia.CalcFields(Content);
+        if TenantMedia.Content.HasValue then begin
+            TenantMedia.Content.CreateInStream(DocumentInStream);
+            TempBlob.CreateOutStream(DocumentOutStream);
+            CopyStream(DocumentOutStream, DocumentInStream);
+            ToBase64_pdf := Base64Convert.ToBase64(DocumentInStream);
+            FileMgt.BLOBExport(TempBlob, PdfFileName, true);
+        end;
 
-        TempBlob.CreateInStream(PayloadInStream);
 
-        DownloadFromStream(DocumentInStream, '', '', '', PdfFileName);
+
+
+        // UrlAddress := SalesReceivablesSetup."NCT Etax Service URL";
+        // DSVCHttpContent.GetHeaders(HttpHeadersContent);
+
+        // HttpHeadersContent.Clear();
+        // HttpHeadersContent.Add('Content-Type', 'multipart/form-data;boundary=D365BC');
+        // Clear(TempBlob);
+        // TempBlob.CreateOutStream(PayloadOutStream);
+
+        // PayloadOutStream.WriteText('--D365BC' + NewLine);
+        // PayloadOutStream.WriteText('Content-Disposition: form-data; name="SellerTaxId"' + NewLine);
+        // PayloadOutStream.WriteText(NewLine);
+        // PayloadOutStream.WriteText(SalesReceivablesSetup."NCT Etax Seller Tax ID" + NewLine);
+        // PayloadOutStream.WriteText('--D365BC' + NewLine);
+
+        // PayloadOutStream.WriteText('Content-Disposition: form-data; name="SellerBranchId"' + NewLine);
+        // PayloadOutStream.WriteText(NewLine);
+        // PayloadOutStream.WriteText(SalesReceivablesSetup."NCT Etax Seller Branch ID" + NewLine);
+        // PayloadOutStream.WriteText('--D365BC' + NewLine);
+
+        // PayloadOutStream.WriteText('Content-Disposition: form-data; name="UserCode"' + NewLine);
+        // PayloadOutStream.WriteText(NewLine);
+        // PayloadOutStream.WriteText(SalesReceivablesSetup."NCT Etax User Code" + NewLine);
+        // PayloadOutStream.WriteText('--D365BC' + NewLine);
+
+        // PayloadOutStream.WriteText('Content-Disposition: form-data; name="AccessKey"' + NewLine);
+        // PayloadOutStream.WriteText(NewLine);
+        // PayloadOutStream.WriteText(SalesReceivablesSetup."NCT Etax Access Key" + NewLine);
+        // PayloadOutStream.WriteText('--D365BC' + NewLine);
+
+        // PayloadOutStream.WriteText('Content-Disposition: form-data; name="ServiceCode"' + NewLine);
+        // PayloadOutStream.WriteText(NewLine);
+        // PayloadOutStream.WriteText(Format(SalesReceivablesSetup."NCT Etax Service Code") + NewLine);
+        // PayloadOutStream.WriteText('--D365BC' + NewLine);
+
+        // PayloadOutStream.WriteText('Content-Disposition: form-data; name="APIKey"' + NewLine);
+        // PayloadOutStream.WriteText(NewLine);
+        // PayloadOutStream.WriteText(SalesReceivablesSetup.GetBlobData_APIKey() + NewLine);
+        // PayloadOutStream.WriteText('--D365BC' + NewLine);
+
+
+        // PayloadOutStream.WriteText('Content-Disposition: form-data; name="TextContent"' + NewLine);
+        // PayloadOutStream.WriteText(NewLine);
+        // PayloadOutStream.WriteText(ToBase64_txt + NewLine);
+        // PayloadOutStream.WriteText('--D365BC' + NewLine);
+
+
+        // PayloadOutStream.WriteText('Content-Disposition: form-data; name="PDFContent"' + NewLine);
+        // PayloadOutStream.WriteText(NewLine);
+        // PayloadOutStream.WriteText(ToBase64_pdf + NewLine);
+        // PayloadOutStream.WriteText('--D365BC--' + NewLine);
+
+        // TempBlob.CreateInStream(PayloadInStream);
 
         // DSVCHttpContent.WriteFrom(PayloadInStream);
         // DSVCHttpRequestMessage.Content := DSVCHttpContent;
@@ -405,6 +446,8 @@ codeunit 80200 "NCT ETaxFunc"
         //     // Hyperlink(SelectDataDownload[2]);
         // end else
         //     Message(ResponseText);
+
+
     end;
 
 
@@ -437,6 +480,7 @@ codeunit 80200 "NCT ETaxFunc"
     end;
 
     var
+        TempEtaxLog: Record "NCT Etax Log" temporary;
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         CompanyInfo: Record "Company Information";
         VatBusSetup: Record "VAT Business Posting Group";
