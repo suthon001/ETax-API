@@ -22,9 +22,9 @@ table 80200 "NCT Etax Log"
         {
             Caption = 'Document No.';
         }
-        field(4; "File Name"; Text[250])
+        field(4; "Etax Type"; Text[250])
         {
-            Caption = 'File Name';
+            Caption = 'Etax Type';
         }
         field(5; "Create By"; Code[50])
         {
@@ -46,10 +46,7 @@ table 80200 "NCT Etax Log"
         {
             Caption = 'Last Text File';
         }
-        field(10; "Etax Type"; Text[250])
-        {
-            Caption = 'Etax Type';
-        }
+
     }
     keys
     {
@@ -58,4 +55,18 @@ table 80200 "NCT Etax Log"
             Clustered = true;
         }
     }
+    /// <summary>
+    /// GetLastEntry.
+    /// </summary>
+    /// <returns>Return value of type Integer.</returns>
+    procedure GetLastEntry(): Integer
+    var
+        LogEtax: Record "NCT Etax Log";
+    begin
+        LogEtax.Reset();
+        LogEtax.SetCurrentKey("Entry No.");
+        if LogEtax.FindLast() then
+            exit(LogEtax."Entry No." + 1);
+        exit(1);
+    end;
 }
