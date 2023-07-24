@@ -30,7 +30,7 @@ codeunit 80200 "NCT ETaxFunc"
     procedure ETaxSalesReceip(var pSalesReceipt: Record "NCT Billing Receipt Header")
     var
         Cust: Record Customer;
-        SalesInvoiceLine: Record "NCT Billing Receipt Line";
+        SalesBillingLine: Record "NCT Billing Receipt Line";
         NoSeries: Record "No. Series";
         Itemcategory: Record "Item Category";
         PaymentTerms: Record "Payment Terms";
@@ -43,7 +43,7 @@ codeunit 80200 "NCT ETaxFunc"
         ltFileName, ToFileName : Text;
         DataText, ltVatBranch, ltCustVatBranch, EtaxData, NewLine : Text;
         CurrencyCode: Code[10];
-        TotalSalesInvoiceLine, LineNo : Integer;
+        TotalSalesReceiptLine, LineNo : Integer;
         VatPer, TotalLineDisAmt : Decimal;
         TotalAmt: array[100] of Decimal;
         CR: Char;
@@ -68,15 +68,15 @@ codeunit 80200 "NCT ETaxFunc"
                     NoSeries.GET(pSalesReceipt."No. Series");
                     NoSeries.TestField("NCT Etax Type Code");
 
-                    Cust.GET(pSalesInvHeader."Sell-to Customer No.");
-                    if not PaymentTerms.GET(pSalesInvHeader."Payment Terms Code") then
+                    Cust.GET(pSalesReceipt."Bill/Pay-to Cust/Vend No.");
+                    if not PaymentTerms.GET(pSalesReceipt."Payment Terms Code") then
                         PaymentTerms.Init();
-                    ltFileName := StrSubstNo(ltFilenameLbl, CompanyInfo."VAT Registration No.", pSalesInvHeader."No.", pSalesInvHeader."NCT Etax No. of Send" + 1) + '.txt';
-                    ToFileName := StrSubstNo(ltFilenameLbl, CompanyInfo."VAT Registration No.", pSalesInvHeader."No.", pSalesInvHeader."NCT Etax No. of Send" + 1);
+                    ltFileName := StrSubstNo(ltFilenameLbl, CompanyInfo."VAT Registration No.", pSalesReceipt."No.", pSalesReceipt."NCT Etax No. of Send" + 1) + '.txt';
+                    ToFileName := StrSubstNo(ltFilenameLbl, CompanyInfo."VAT Registration No.", pSalesReceipt."No.", pSalesReceipt."NCT Etax No. of Send" + 1);
                     DataText := SetDataEtax('C', true);
                     DataText += SetDataEtax(DelChr(CompanyInfo."VAT Registration No.", '=', '-'), true);
-                    VatBusSetup.get(pSalesInvHeader."VAT Bus. Posting Group");
-                    if not WHTBus.GET(pSalesInvHeader."NCT WHT Business Posting Group") then
+                    VatBusSetup.get(pSalesReceipt."VAT Bus. Posting Group");
+                    if not WHTBus.GET(pSalesReceipt."WHT Business Posting Group") then
                         WHTBus.Init();
                     if VatBusSetup."NCT Head Office" then
                         ltVatBranch := '00000'
@@ -92,19 +92,19 @@ codeunit 80200 "NCT ETaxFunc"
                     DataText := SetDataEtax('H', true); //1
                     DataText += SetDataEtax(GetEnumValueName(NoSeries."NCT Etax Type Code"), true); //2
                     DataText += SetDataEtax(format(NoSeries."NCT Etax Type Code"), true); // 3
-                    DataText += SetDataEtax(pSalesInvHeader."No.", true); //4
-                    DataText += SetDataEtax(format(pSalesInvHeader."Document Date", 0, '<Year4>-<Month,2>-<Day,2>') + 'T00:00:00', true); //5
+                    DataText += SetDataEtax(pSalesReceipt."No.", true); //4
+                    DataText += SetDataEtax(format(pSalesReceipt."Document Date", 0, '<Year4>-<Month,2>-<Day,2>') + 'T00:00:00', true); //5
                     DataText += SetDataEtax('', true);//6
                     DataText += SetDataEtax('', true);//7
                     DataText += SetDataEtax('', true);//8
                     DataText += SetDataEtax('', true);//9
                     DataText += SetDataEtax('', true);//10
-                    DataText += SetDataEtax(pSalesInvHeader."External Document No.", true);//11
+                    DataText += SetDataEtax(pSalesReceipt."External Document No.", true);//11
                     DataText += SetDataEtax('', true);//12
                     DataText += SetDataEtax('', true);//13
                     DataText += SetDataEtax('', true);//14
                     DataText += SetDataEtax('', true);//15
-                    DataText += SetDataEtax('', true);//16
+                    DataText += SetDataEtax(pSalesReceipt.Remark, true);//16
                     DataText += SetDataEtax('', true);//17
                     DataText += SetDataEtax('', true);//18
                     DataText += SetDataEtax('', true);//19
@@ -121,10 +121,9 @@ codeunit 80200 "NCT ETaxFunc"
                         DataText += SetDataEtax('N', false);
                     EtaxData := EtaxData + DataText + NewLine;
 
-                    if not Cust.GET(pSalesInvHeader."Bill-to Customer No.") then
-                        Cust.Init();
 
-                    if pSalesInvHeader."NCT Head Office" then
+
+                    if Cust."NCT Head Office" then
                         ltCustVatBranch := '00000'
                     else
                         ltCustVatBranch := Cust."NCT VAT Branch Code";
@@ -132,8 +131,8 @@ codeunit 80200 "NCT ETaxFunc"
                         ltCustVatBranch := '00000';
 
                     DataText := SetDataEtax('B', true); //1
-                    DataText += SetDataEtax(pSalesInvHeader."Bill-to Customer No.", true); //2
-                    DataText += SetDataEtax(pSalesInvHeader."Bill-to Name" + ' ' + pSalesInvHeader."Bill-to Name 2", true); //3
+                    DataText += SetDataEtax(pSalesReceipt."Bill/Pay-to Cust/Vend No.", true); //2
+                    DataText += SetDataEtax(pSalesReceipt."Bill/Pay-to Cust/Vend Name" + ' ' + pSalesReceipt."Bill/Pay-to Cust/Vend Name 2", true); //3
                     if WHTBus."WHT Certificate Option" = WHTBus."WHT Certificate Option"::" " then
                         DataText += SetDataEtax('', true);
                     if WHTBus."WHT Certificate Option" = WHTBus."WHT Certificate Option"::"ภ.ง.ด.3" then
@@ -143,49 +142,46 @@ codeunit 80200 "NCT ETaxFunc"
                     if WHTBus."WHT Certificate Option" = WHTBus."WHT Certificate Option"::"ภ.ง.ด.54" then
                         DataText += SetDataEtax('CCPT', true);
 
-                    DataText += SetDataEtax(DelChr(pSalesInvHeader."VAT Registration No.", '=', '-'), true); //5
+                    DataText += SetDataEtax(DelChr(pSalesReceipt."VAT Registration No.", '=', '-'), true); //5
                     if WHTBus."WHT Certificate Option" = WHTBus."WHT Certificate Option"::"ภ.ง.ด.53" then
                         DataText += SetDataEtax(ltCustVatBranch, true)
                     else
                         DataText += SetDataEtax('', true);
-                    DataText += SetDataEtax(pSalesInvHeader."Bill-to Contact", true);
+                    DataText += SetDataEtax(pSalesReceipt."Bill/Pay-to Contact", true);
                     DataText += SetDataEtax('', true);
-                    Cust.get(pSalesInvHeader."Sell-to Customer No.");
                     DataText += SetDataEtax(Cust."E-Mail", true);
                     DataText += SetDataEtax('', true);
-                    DataText += SetDataEtax(pSalesInvHeader."bill-to Post Code", true);
+                    DataText += SetDataEtax(pSalesReceipt."Bill/Pay-to Post Code", true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
-                    DataText += SetDataEtax(pSalesInvHeader."bill-to Address" + ' ' + pSalesInvHeader."bill-to Address 2", true);
-                    DataText += SetDataEtax('', true);
-                    DataText += SetDataEtax('', true);
-                    DataText += SetDataEtax('', true);
+                    DataText += SetDataEtax(pSalesReceipt."Bill/Pay-to Address" + ' ' + pSalesReceipt."Bill/Pay-to Address 2", true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
-                    DataText += SetDataEtax(pSalesInvHeader."bill-to Post Code", true);
-                    DataText += SetDataEtax(pSalesInvHeader."bill-to City", true);
-                    DataText += SetDataEtax(pSalesInvHeader."bill-to Country/Region Code", false);
+                    DataText += SetDataEtax('', true);
+                    DataText += SetDataEtax('', true);
+                    DataText += SetDataEtax('', true);
+                    DataText += SetDataEtax(pSalesReceipt."Bill/Pay-to Post Code", true);
+                    DataText += SetDataEtax(pSalesReceipt."Bill/Pay-to City", true);
+                    DataText += SetDataEtax(pSalesReceipt."Bill/Pay-to Country/Region", false);
                     EtaxData := EtaxData + DataText + NewLine;
 
-                    if pSalesInvHeader."Currency Code" <> '' then
+                    if pSalesReceipt."Currency Code" <> '' then
                         CurrencyCode := CopyStr(CurrencyCode, 1, 3)
                     else
                         CurrencyCode := 'THB';
-                    SalesInvoiceLine.reset();
-                    SalesInvoiceLine.SetRange("Document No.", pSalesInvHeader."No.");
-                    SalesInvoiceLine.SetFilter("No.", '<>%1', '');
-                    TotalSalesInvoiceLine := SalesInvoiceLine.count();
-                    if SalesInvoiceLine.FindSet() then
+                    SalesBillingLine.reset();
+                    SalesBillingLine.SetRange("Document Type", pSalesReceipt."Document Type");
+                    SalesBillingLine.SetRange("Document No.", pSalesReceipt."No.");
+                    SalesBillingLine.SetFilter("Source Document No.", '<>%1', '');
+                    TotalSalesReceiptLine := SalesBillingLine.count();
+                    if SalesBillingLine.FindSet() then
                         repeat
                             LineNo += 1;
-                            if not ltItem.GET(SalesInvoiceLine."No.") then
-                                ltItem.init();
-                            if not Itemcategory.GET(ltItem."Item Category Code") then
-                                Itemcategory.Init();
+
 
 
 
@@ -233,7 +229,7 @@ codeunit 80200 "NCT ETaxFunc"
                             else
                                 DataText += SetDataEtax(CurrencyCode, false);
                             EtaxData := EtaxData + DataText + NewLine;
-                        until SalesInvoiceLine.next() = 0;
+                        until SalesBillingLine.next() = 0;
                     SalesInvoiceLine.reset();
                     SalesInvoiceLine.SetRange("Document No.", pSalesInvHeader."No.");
                     SalesInvoiceLine.SetFilter("VAT %", '<>%1', 0);
@@ -418,7 +414,7 @@ codeunit 80200 "NCT ETaxFunc"
                     if not Cust.GET(pSalesInvHeader."Bill-to Customer No.") then
                         Cust.Init();
 
-                    if pSalesInvHeader."NCT Head Office" then
+                    if Cust."NCT Head Office" then
                         ltCustVatBranch := '00000'
                     else
                         ltCustVatBranch := Cust."NCT VAT Branch Code";
@@ -719,7 +715,7 @@ codeunit 80200 "NCT ETaxFunc"
                     if not Cust.GET(pSalesCreditMemo."Bill-to Customer No.") then
                         Cust.Init();
 
-                    if pSalesCreditMemo."NCT Head Office" then
+                    if Cust."NCT Head Office" then
                         ltCustVatBranch := '00000'
                     else
                         ltCustVatBranch := Cust."NCT VAT Branch Code";
