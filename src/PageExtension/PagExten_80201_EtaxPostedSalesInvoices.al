@@ -21,6 +21,7 @@ pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoi
                 var
                     EtaxFunc: Codeunit "NCT ETaxFunc";
                     SalesInvoice: record "Sales Invoice Header";
+
                 begin
 
                     SalesInvoice.Copy(rec);
@@ -29,10 +30,7 @@ pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoi
                     SalesInvoice.SetFilter(Amount, '<>%1', 0);
                     if not confirm(StrSubstNo('Do you want Send to E-tax %1 record', SalesInvoice.Count)) then
                         exit;
-                    if SalesInvoice.FindSet() then
-                        repeat
-                            EtaxFunc.ETaxSalesInvoice(SalesInvoice);
-                        until SalesInvoice.Next() = 0;
+                    EtaxFunc.ETaxSalesInvoice(SalesInvoice);
                 end;
             }
             action(EtaxLog)
