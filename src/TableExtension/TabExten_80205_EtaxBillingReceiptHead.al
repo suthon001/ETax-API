@@ -1,20 +1,10 @@
 /// <summary>
-/// TableExtension NCT E-Tax Sales Cr.Memo Header (ID 80201) extends Record Sales Cr.Memo Header.
+/// TableExtension NCT Etax Billing Receipt Head. (ID 80205) extends Record NCT Billing Receipt Header.
 /// </summary>
-tableextension 80201 "NCT E-Tax Sales Cr.Memo Header" extends "Sales Cr.Memo Header"
+tableextension 80205 "NCT Etax Billing Receipt Head." extends "NCT Billing Receipt Header"
 {
     fields
     {
-        field(80200; "NCT Etax Purpose"; Enum "NCT Etax Purpose")
-        {
-            Caption = 'E-Tax Purpose';
-            DataClassification = CustomerContent;
-        }
-        field(80201; "NCT Etax Purpose Remark"; text[250])
-        {
-            Caption = 'E-Tax Purpose Remark';
-            DataClassification = CustomerContent;
-        }
         field(80245; "NCT Etax Last File Name"; Text[250])
         {
             Editable = false;

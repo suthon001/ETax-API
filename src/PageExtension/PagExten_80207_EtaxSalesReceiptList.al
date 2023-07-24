@@ -1,11 +1,11 @@
 /// <summary>
-/// PageExtension NCT Etax Posted Sales Invoices (ID 80201) extends Record Posted Sales Invoices.
+/// PageExtension NCT Etax Sales Receipt List (ID 80207) extends Record NCT Sales Receipt List.
 /// </summary>
-pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoices"
+pageextension 80207 "NCT Etax Sales Receipt List" extends "NCT Sales Receipt List"
 {
     layout
     {
-        addlast(Control1)
+        addlast(General)
         {
             field("NCT Etax Send to E-Tax"; rec."NCT Etax Send to E-Tax")
             {
@@ -56,17 +56,18 @@ pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoi
                 trigger OnAction()
                 var
                     EtaxFunc: Codeunit "NCT ETaxFunc";
-                    SalesInvoice: record "Sales Invoice Header";
+                    SalesReceipt: record "NCT Billing Receipt Header";
 
                 begin
 
-                    SalesInvoice.Copy(rec);
-                    CurrPage.SetSelectionFilter(SalesInvoice);
-                    SalesInvoice.SetRange("NCT Etax Send to E-Tax", false);
-                    SalesInvoice.SetFilter(Amount, '<>%1', 0);
-                    if not confirm(StrSubstNo('Do you want Send to E-tax %1 record', SalesInvoice.Count)) then
+                    SalesReceipt.Copy(rec);
+                    CurrPage.SetSelectionFilter(SalesReceipt);
+                    SalesReceipt.SetRange("NCT Etax Send to E-Tax", false);
+                    SalesReceipt.SetRange(Status, SalesReceipt.Status::Posted);
+                    SalesReceipt.SetFilter(Amount, '<>%1', 0);
+                    if not confirm(StrSubstNo('Do you want Send to E-tax %1 record', SalesReceipt.Count)) then
                         exit;
-                    EtaxFunc.ETaxSalesInvoice(SalesInvoice);
+                    EtaxFunc.ETaxSalesReceip(SalesReceipt);
                 end;
             }
             action(EtaxLog)
@@ -86,7 +87,7 @@ pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoi
                 begin
                     CLEAR(EtaxLogEntry);
                     EtaxLog.reset();
-                    EtaxLog.SetRange("Document Type", EtaxLog."Document Type"::"Sales Invoice");
+                    EtaxLog.SetRange("Document Type", EtaxLog."Document Type"::"Sales Receipt");
                     EtaxLog.SetRange("Document No.", rec."No.");
                     EtaxLogEntry.SetTableView(EtaxLog);
                     EtaxLogEntry.Run();

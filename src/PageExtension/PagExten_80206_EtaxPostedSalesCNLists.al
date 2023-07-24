@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension NCT Etax Posted Sales Invoices (ID 80201) extends Record Posted Sales Invoices.
+/// PageExtension NCT Etax Posted Sales CN Lists (ID 80206) extends Record Posted Sales Credit Memos.
 /// </summary>
-pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoices"
+pageextension 80206 "NCT Etax Posted Sales CN Lists" extends "Posted Sales Credit Memos"
 {
     layout
     {
@@ -56,17 +56,17 @@ pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoi
                 trigger OnAction()
                 var
                     EtaxFunc: Codeunit "NCT ETaxFunc";
-                    SalesInvoice: record "Sales Invoice Header";
+                    SalesCreditMemo: record "Sales Cr.Memo Header";
 
                 begin
 
-                    SalesInvoice.Copy(rec);
-                    CurrPage.SetSelectionFilter(SalesInvoice);
-                    SalesInvoice.SetRange("NCT Etax Send to E-Tax", false);
-                    SalesInvoice.SetFilter(Amount, '<>%1', 0);
-                    if not confirm(StrSubstNo('Do you want Send to E-tax %1 record', SalesInvoice.Count)) then
+                    SalesCreditMemo.Copy(rec);
+                    CurrPage.SetSelectionFilter(SalesCreditMemo);
+                    SalesCreditMemo.SetRange("NCT Etax Send to E-Tax", false);
+                    SalesCreditMemo.SetFilter(Amount, '<>%1', 0);
+                    if not confirm(StrSubstNo('Do you want Send to E-tax %1 record', SalesCreditMemo.Count)) then
                         exit;
-                    EtaxFunc.ETaxSalesInvoice(SalesInvoice);
+                    EtaxFunc.ETaxSalesCreditMemo(SalesCreditMemo);
                 end;
             }
             action(EtaxLog)
@@ -86,7 +86,7 @@ pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoi
                 begin
                     CLEAR(EtaxLogEntry);
                     EtaxLog.reset();
-                    EtaxLog.SetRange("Document Type", EtaxLog."Document Type"::"Sales Invoice");
+                    EtaxLog.SetRange("Document Type", EtaxLog."Document Type"::"Sales Credit Memo");
                     EtaxLog.SetRange("Document No.", rec."No.");
                     EtaxLogEntry.SetTableView(EtaxLog);
                     EtaxLogEntry.Run();
@@ -96,3 +96,4 @@ pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoi
         }
     }
 }
+
