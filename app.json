@@ -1,27 +1,37 @@
 {
   "id": "dadc4a2e-b89c-4036-bc58-55e156a7057a",
   "name": "ETax",
-  "publisher": "DSVC Business Solutions Ltd.",
+  "publisher": "NET CUBE (THAILAND) CO., LTD.",
   "version": "1.0.0.0",
-  "brief": "E-Tax",
-  "description": "App for E-Tax",
-  "privacyStatement": "https://dsvc.pro/legal/privacy_policy.html",
-  "EULA": "https://dsvc.pro/legal/EULA.html",
-  "help": "https://dsvc.pro/help/",
-  "url": "https://dsvc.pro/",
-  "logo": "logo.png",
-  "dependencies": [],
-  "screenshots": [],
-  "platform": "1.0.0.0",
-  "application": "19.0.0.0",
-  "features": ["TranslationFile"],
-  "idRanges": [
+  "brief": "",
+  "description": "E-Tax (Invoice,CN,E-Receipt)",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "https://www.netcube.co.th/th",
+  "logo": "./netcube-logo-01.jpg",
+  "dependencies": [
     {
-      "from": 70200,
-      "to": 70300
+      "id": "200a5cbc-0ea5-4109-913a-82517e2126d8",
+      "publisher": "NET CUBE (THAILAND) CO., LTD.",
+      "name": "Thai Localized",
+      "version": "22.0.0.22"
     }
   ],
-  "contextSensitiveHelpUrl": "https://dsvc.pro/help/",
-  "resourceExposurePolicy": {"allowDebugging": true,"allowDownloadingSource": false,"includeSourceInSymbolFile": false},
-  "runtime": "8.0"
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "22.0.0.0",
+  "target": "Cloud",
+  "idRanges": [
+    {
+      "from": 80200,
+      "to": 80250
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": false,
+    "includeSourceInSymbolFile": false
+  },
+  "runtime": "11.0"
 }

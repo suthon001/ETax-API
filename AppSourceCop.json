@@ -1,4 +1,3 @@
 {
-       "mandatoryPrefix": "DSVC",
-       "supportedCountries":["TH","US","CA"]
+       "mandatoryPrefix": "NCT "
 }

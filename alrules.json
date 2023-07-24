@@ -1,0 +1,61 @@
+{
+    "name":"E-Tax Rules NCT",
+    "description": "Rules to Ignore",
+    "rules": [
+        {
+            "id": "AA0215",
+            "action": "Hidden",
+            "justification": "Not right"
+        },
+        {
+            "id": "AA0022",
+            "action": "Hidden",
+            "justification": "Not right"
+        },
+        {
+            "id": "AA0021",
+            "action": "Hidden",
+            "justification": "Not right"
+        },
+        {
+            "id": "AA0072",
+            "action": "Hidden",
+            "justification": "Not right"
+        },
+        {
+            "id": "AA0232",
+            "action": "Hidden",
+            "justification": "Not right"
+        },
+        {
+            "id": "AA0470",
+            "action": "Hidden",
+            "justification": "Not right"
+        },
+        {
+            "id": "AA0073",
+            "action": "Hidden",
+            "justification": "Not right"
+        },
+        {
+            "id": "AA0074",
+            "action": "Hidden",
+            "justification": "Not right"
+        },
+        {
+            "id": "AA0204",
+            "action": "Hidden",
+            "justification": "Not right"
+        },
+        {
+            "id": "AA0217",
+            "action": "Hidden",
+            "justification": "Not right"
+        },
+        {
+            "id": "AA0228",
+            "action": "Hidden",
+            "justification": "Not right"
+        }
+    ]
+}

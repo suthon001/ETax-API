@@ -1,0 +1,15 @@
+{
+    "al.enableCodeAnalysis": true,
+    "git.confirmSync":false,
+    "git.autofetch":true,
+    "git.enableSmartCommit":true,
+   "al.codeAnalyzers": [
+   "${CodeCop}",
+   "${PerTenantExtensionCop}",
+   "${UICop}"
+    ],
+    "al.compilationOptions":{
+
+    },
+    "al.ruleSetPath":"./alrules.json"
+}
