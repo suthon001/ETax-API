@@ -1,5 +1,5 @@
 /// <summary>
-/// PageExtension NCT Etax Sales Setup (ID 80202) extends Record Sales & Receivables Setup.
+/// PageExtension NCT Etax Sales Setup (ID 80202) extends Record Sales Receivables Setup.
 /// </summary>
 pageextension 80202 "NCT Etax Sales Setup" extends "Sales & Receivables Setup"
 {

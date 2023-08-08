@@ -32,9 +32,7 @@ codeunit 80200 "NCT ETaxFunc"
         Cust: Record Customer;
         SalesBillingLine: Record "NCT Billing Receipt Line";
         NoSeries: Record "No. Series";
-        Itemcategory: Record "Item Category";
         PaymentTerms: Record "Payment Terms";
-        ltItem: Record Item;
         WHTBus: Record "NCT WHT Business Posting Group";
         ltTempblob: Codeunit "Temp Blob";
         ltOutStream: OutStream;
@@ -44,7 +42,7 @@ codeunit 80200 "NCT ETaxFunc"
         DataText, ltVatBranch, ltCustVatBranch, EtaxData, NewLine : Text;
         CurrencyCode: Code[10];
         TotalSalesReceiptLine, LineNo : Integer;
-        VatPer, TotalLineDisAmt : Decimal;
+        VatPer: Decimal;
         TotalAmt: array[100] of Decimal;
         CR: Char;
         LF: Char;
@@ -1194,6 +1192,7 @@ codeunit 80200 "NCT ETaxFunc"
     local procedure CreateToZipFile(pFileName: Text)
     var
         TenantMedia: Record "Tenant Media";
+        SalesSetup: Record "Sales & Receivables Setup";
         DataCompression: Codeunit "Data Compression";
         ltTempBlob: Codeunit "Temp Blob";
         FileCount: Integer;
@@ -1202,32 +1201,49 @@ codeunit 80200 "NCT ETaxFunc"
         ZipFileOutstream: OutStream;
         ltInStream, ZipFileInstream : InStream;
     begin
+        SalesSetup.GET();
         ZipName := pFileName + '.zip';
         FileCount := 0;
-        TempEtaxLog.Reset();
-        if TempEtaxLog.FindSet() then begin
-            DataCompression.CreateZipArchive();
-            repeat
-                MaxLoop := TempEtaxLog."Last Text File".Count();
-                If MaxLoop <> 0 then
-                    for iLoop := 1 to MaxLoop do
-                        if TenantMedia.Get(TempEtaxLog."Last Text File".Item(iLoop)) then begin
-                            TenantMedia.Calcfields(Content);
-                            if TenantMedia.Content.HasValue() then begin
-                                TenantMedia.Content.CreateInStream(ltInStream);
-                                DataCompression.AddEntry(ltInStream, TempEtaxLog."File Name" + '.txt');
-                                FileCount += 1;
-                            end;
-                        end;
-
-            until TempEtaxLog.Next() = 0;
-            If FileCount > 0 then begin
-                ltTempBlob.CreateOutStream(ZipFileOutstream);
-                DataCompression.SaveZipArchive(ZipFileOutstream);
-                ltTempBlob.CreateInStream(ZipFileInstream);
-                DownloadFromStream(ZipFileInstream, '', '', '', ZipName);
+        if (SalesSetup."NCT Etax Download PDF File") or (SalesSetup."NCT Etax Download Text File") then begin
+            TempEtaxLog.Reset();
+            if TempEtaxLog.FindSet() then begin
+                DataCompression.CreateZipArchive();
+                repeat
+                    if SalesSetup."NCT Etax Download Text File" then begin
+                        MaxLoop := TempEtaxLog."Last Text File".Count();
+                        If MaxLoop <> 0 then
+                            for iLoop := 1 to MaxLoop do
+                                if TenantMedia.Get(TempEtaxLog."Last Text File".Item(iLoop)) then begin
+                                    TenantMedia.Calcfields(Content);
+                                    if TenantMedia.Content.HasValue() then begin
+                                        TenantMedia.Content.CreateInStream(ltInStream);
+                                        DataCompression.AddEntry(ltInStream, TempEtaxLog."File Name" + '.txt');
+                                        FileCount += 1;
+                                    end;
+                                end;
+                    end;
+                    if SalesSetup."NCT Etax Download PDF File" then begin
+                        MaxLoop := TempEtaxLog."Last Pdf File".Count();
+                        If MaxLoop <> 0 then
+                            for iLoop := 1 to MaxLoop do
+                                if TenantMedia.Get(TempEtaxLog."Last Pdf File".Item(iLoop)) then begin
+                                    TenantMedia.Calcfields(Content);
+                                    if TenantMedia.Content.HasValue() then begin
+                                        TenantMedia.Content.CreateInStream(ltInStream);
+                                        DataCompression.AddEntry(ltInStream, TempEtaxLog."File Name" + '.pdf');
+                                        FileCount += 1;
+                                    end;
+                                end;
+                    end;
+                until TempEtaxLog.Next() = 0;
+                If FileCount > 0 then begin
+                    ltTempBlob.CreateOutStream(ZipFileOutstream);
+                    DataCompression.SaveZipArchive(ZipFileOutstream);
+                    ltTempBlob.CreateInStream(ZipFileInstream);
+                    DownloadFromStream(ZipFileInstream, '', '', '', ZipName);
+                end;
+                DataCompression.CloseZipArchive();
             end;
-            DataCompression.CloseZipArchive();
         end;
     end;
 
