@@ -41,8 +41,10 @@ pageextension 80206 "NCT Etax Posted Sales CN Lists" extends "Posted Sales Credi
     }
     actions
     {
+
         addfirst(processing)
         {
+
             action(SendEtax)
             {
                 ApplicationArea = all;
