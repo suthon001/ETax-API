@@ -9,5 +9,8 @@ permissionset 80200 "NCT Etax Permission"
         table "NCT Etax Log" = X,
         tabledata "NCT Etax Log" = RMID,
         page "NCT Etax Log Entry" = X,
+        report "NCT ETax Sales Credit Memo" = X,
+        report "NCT ETax Sales Invoice" = X,
+        report "NCT ETax Sales Receipt" = X,
         codeunit "NCT ETaxFunc" = X;
 }

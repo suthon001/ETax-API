@@ -278,7 +278,7 @@ codeunit 80200 "NCT ETaxFunc"
                     ltTempblob.CreateOutStream(ltOutStream, TextEncoding::UTF8);
                     ltOutStream.WriteText(EtaxData);
                     ltTempblob.CreateInStream(ltInStream, TextEncoding::UTF8);
-                    if CallEtaxWebservice(2, pSalesReceipt."No.", ToFileName, EtaxData, ltInStream, Format(NoSeries."NCT Etax Type Code")) then begin
+                    if CallEtaxWebservice(2, pSalesReceipt."No.", ToFileName, EtaxData, ltInStream, NoSeries."NCT Etax Type Code") then begin
                         pSalesReceipt."NCT Etax Send to E-Tax" := true;
                         pSalesReceipt."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
                         pSalesReceipt."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
@@ -572,7 +572,7 @@ codeunit 80200 "NCT ETaxFunc"
                     ltTempblob.CreateOutStream(ltOutStream, TextEncoding::UTF8);
                     ltOutStream.WriteText(EtaxData);
                     ltTempblob.CreateInStream(ltInStream, TextEncoding::UTF8);
-                    if CallEtaxWebservice(0, pSalesInvHeader."No.", ToFileName, EtaxData, ltInStream, Format(NoSeries."NCT Etax Type Code")) then begin
+                    if CallEtaxWebservice(0, pSalesInvHeader."No.", ToFileName, EtaxData, ltInStream, NoSeries."NCT Etax Type Code") then begin
                         pSalesInvHeader."NCT Etax Send to E-Tax" := true;
                         pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
                         pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
@@ -891,7 +891,7 @@ codeunit 80200 "NCT ETaxFunc"
                     ltTempblob.CreateOutStream(ltOutStream, TextEncoding::UTF8);
                     ltOutStream.WriteText(EtaxData);
                     ltTempblob.CreateInStream(ltInStream, TextEncoding::UTF8);
-                    if CallEtaxWebservice(1, pSalesCreditMemo."No.", ToFileName, EtaxData, ltInStream, Format(NoSeries."NCT Etax Type Code")) then begin
+                    if CallEtaxWebservice(1, pSalesCreditMemo."No.", ToFileName, EtaxData, ltInStream, NoSeries."NCT Etax Type Code") then begin
                         pSalesCreditMemo."NCT Etax Send to E-Tax" := true;
                         pSalesCreditMemo."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
                         pSalesCreditMemo."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
@@ -952,18 +952,24 @@ codeunit 80200 "NCT ETaxFunc"
     /// </summary>
     /// <param name="pDocumentType">Option "Sales Invoice","Sales Credit Memo","Sales Receipt".</param>
     /// <param name="pNo">code[30].</param>
-    local procedure CreatePDFReport(pDocumentType: Option "Sales Invoice","Sales Credit Memo","Sales Receipt"; pNo: code[20]; pInstream: InStream; pFileName: Text; pEtaxType: Text)
+    local procedure CreatePDFReport(pDocumentType: Option "Sales Invoice","Sales Credit Memo","Sales Receipt"; pNo: code[20]; pInstream: InStream; pFileName: Text; pEtaxType: Enum "NCT Etax Type")
     var
         SaleInvH: Record "Sales Invoice Header";
         SalesCN: Record "Sales Cr.Memo Header";
         SalesReceiptHeader: Record "NCT Billing Receipt Header";
         TempBlob: Codeunit "Temp Blob";
-        SalesInvReport: Report "NCT Sales Invoice (Post)";
-        SalesCreditMemo: report "NCT Sales Credit Memo (Post)";
-        SalesReceipt: Report "NCT Sales Receipt";
+        SalesInvReport: Report "NCT ETax Sales Invoice";
+        SalesCreditMemo: report "NCT ETax Sales Credit Memo";
+        SalesReceipt: Report "NCT ETax Sales Receipt";
+        ltTaxTypeEng: Enum "NCT Etax Type Eng";
+        ltTaxTypeEngText: Text;
         ltDocumentOutStream: OutStream;
         ltDocumentInStream: InStream;
+        ltEngIndex: Integer;
     begin
+        ltEngIndex := pEtaxType.Ordinals.IndexOf(pEtaxType.AsInteger());
+        ltTaxTypeEng.Names.Get(ltEngIndex, ltTaxTypeEngText);
+
         if pDocumentType = pDocumentType::"Sales Invoice" then begin
             SaleInvH.Reset();
             SaleInvH.SetRange("No.", pNo);
@@ -971,6 +977,7 @@ codeunit 80200 "NCT ETaxFunc"
             TempBlob.CreateOutStream(ltDocumentOutStream, TextEncoding::UTF8);
             Clear(SalesInvReport);
             SalesInvReport.SetTableView(SaleInvH);
+            SalesInvReport.setReportCaption(format(pEtaxType), ltTaxTypeEngText);
             SalesInvReport.SaveAs('', ReportFormat::Pdf, ltDocumentOutStream);
             Clear(SalesInvReport);
             TempBlob.CreateInStream(ltDocumentInStream, TextEncoding::UTF8);
@@ -983,6 +990,7 @@ codeunit 80200 "NCT ETaxFunc"
             TempBlob.CreateOutStream(ltDocumentOutStream, TextEncoding::UTF8);
             Clear(SalesCreditMemo);
             SalesCreditMemo.SetTableView(SalesCN);
+            SalesInvReport.setReportCaption(format(pEtaxType), ltTaxTypeEngText);
             SalesCreditMemo.SaveAs('', ReportFormat::Pdf, ltDocumentOutStream);
             Clear(SalesCreditMemo);
             TempBlob.CreateInStream(ltDocumentInStream, TextEncoding::UTF8);
@@ -996,6 +1004,7 @@ codeunit 80200 "NCT ETaxFunc"
             TempBlob.CreateOutStream(ltDocumentOutStream, TextEncoding::UTF8);
             Clear(SalesReceipt);
             SalesReceipt.SetTableView(SalesReceiptHeader);
+            SalesInvReport.setReportCaption(format(pEtaxType), ltTaxTypeEngText);
             SalesReceipt.SaveAs('', ReportFormat::Pdf, ltDocumentOutStream);
             Clear(SalesReceipt);
             TempBlob.CreateInStream(ltDocumentInStream, TextEncoding::UTF8);
@@ -1008,7 +1017,7 @@ codeunit 80200 "NCT ETaxFunc"
         TempEtaxLog."Document No." := pNo;
         TempEtaxLog."Last Pdf File".ImportStream(ltDocumentInStream, pFileName + '.pdf');
         TempEtaxLog."Last Text File".ImportStream(pInstream, pFileName + '.txt');
-        TempEtaxLog."Etax Type" := COPYSTR(pEtaxType, 1, 250);
+        TempEtaxLog."Etax Type" := COPYSTR(format(pEtaxType), 1, 250);
         TempEtaxLog."File Name" := COPYSTR(pFileName, 1, 100);
         TempEtaxLog."Create By" := CopyStr(UserId, 1, 50);
         TempEtaxLog."Create DateTime" := CurrentDateTime();
@@ -1016,7 +1025,7 @@ codeunit 80200 "NCT ETaxFunc"
     end;
 
     [TryFunction]
-    local procedure CallEtaxWebservice(pDocumentType: Option "Sales Invoice","Sales Credit Memo","Sales Receipt"; pNo: code[20]; pfilename: text; pTextData: text; pInstream: InStream; pEtaxType: Text)
+    local procedure CallEtaxWebservice(pDocumentType: Option "Sales Invoice","Sales Credit Memo","Sales Receipt"; pNo: code[20]; pfilename: text; pTextData: text; pInstream: InStream; pEtaxType: Enum "NCT Etax Type")
     var
         TempBlob: Codeunit "Temp Blob";
         Base64Convert: Codeunit "Base64 Convert";
