@@ -50,7 +50,16 @@ table 80200 "NCT Etax Log"
         {
             Caption = 'File Name';
         }
-
+        field(11; "NCT Error Msg."; Text[2047])
+        {
+            Editable = false;
+            Caption = 'Error Msg.';
+            DataClassification = CustomerContent;
+        }
+        field(12; "Last XML File"; MediaSet)
+        {
+            Caption = 'Last XML File';
+        }
     }
     keys
     {
