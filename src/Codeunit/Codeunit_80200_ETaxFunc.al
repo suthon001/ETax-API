@@ -1168,6 +1168,7 @@ codeunit 80200 "NCT ETaxFunc"
         DocumentInStream: InStream;
         PdfFileName, TextFileName : Text;
         TenantMedia: Record "Tenant Media";
+        ltStatus: text;
 
     begin
         CR := 13;
@@ -1242,20 +1243,24 @@ codeunit 80200 "NCT ETaxFunc"
             CLEAR(SelectDataDownload);
             ltJsonToken.ReadFrom(ResponseText);
             ltjsonObject := ltJsonToken.AsObject();
-            CLEAR(InStr);
-            SelectDataDownload[1] := SelectJsonTokenText(ltjsonObject, '$.xmlURL');
-            if Client.Get(SelectDataDownload[1], Response) then begin
-                Response.Content.ReadAs(InStr);
-                Clear(TempEtaxLog."Last XML File");
-                TempEtaxLog."Last XML File".ImportStream(InStr, pfilename + '.xml');
-            end;
-            CLEAR(InStr);
-            SelectDataDownload[2] := SelectJsonTokenText(ltjsonObject, '$.pdfURL');
-            if Client.Get(SelectDataDownload[2], Response) then begin
-                Response.Content.ReadAs(InStr);
-                Clear(TempEtaxLog."Last PDF File");
-                TempEtaxLog."Last PDF File".ImportStream(InStr, pfilename + '.pdf');
-            end;
+            ltStatus := SelectJsonTokenText(ltjsonObject, '$.status');
+            if ltStatus = 'OK' then begin
+                CLEAR(InStr);
+                SelectDataDownload[1] := SelectJsonTokenText(ltjsonObject, '$.xmlURL');
+                if Client.Get(SelectDataDownload[1], Response) then begin
+                    Response.Content.ReadAs(InStr);
+                    Clear(TempEtaxLog."Last XML File");
+                    TempEtaxLog."Last XML File".ImportStream(InStr, pfilename + '.xml');
+                end;
+                CLEAR(InStr);
+                SelectDataDownload[2] := SelectJsonTokenText(ltjsonObject, '$.pdfURL');
+                if Client.Get(SelectDataDownload[2], Response) then begin
+                    Response.Content.ReadAs(InStr);
+                    Clear(TempEtaxLog."Last PDF File");
+                    TempEtaxLog."Last PDF File".ImportStream(InStr, pfilename + '.pdf');
+                end;
+            end else
+                TempEtaxLog."NCT Error Msg." := COPYSTR(SelectJsonTokenText(ltjsonObject, '$.errorMessage'), 1, 2047);
             TempEtaxLog.Modify();
         end else
             ERROR(ResponseText);
