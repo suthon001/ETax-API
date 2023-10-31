@@ -50,7 +50,7 @@ pageextension 80204 "NCT Etax Posted Sales Invoice" extends "Posted Sales Invoic
             action(SendEtax)
             {
                 ApplicationArea = all;
-                Caption = 'E-tax';
+                Caption = 'Send E-tax';
                 Image = SendElectronicDocument;
                 Promoted = true;
                 PromotedCategory = Process;

@@ -60,7 +60,7 @@ pageextension 80205 "NCT ETax Posted Sales CN Card" extends "Posted Sales Credit
             action(SendEtax)
             {
                 ApplicationArea = all;
-                Caption = 'E-tax';
+                Caption = 'Send E-tax';
                 Image = SendElectronicDocument;
                 Promoted = true;
                 PromotedCategory = Process;

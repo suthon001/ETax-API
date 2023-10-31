@@ -50,7 +50,7 @@ pageextension 80208 "NCT Etax Sales Receipt Card" extends "NCT Sales Receipt Car
             action(SendEtax)
             {
                 ApplicationArea = all;
-                Caption = 'E-tax';
+                Caption = 'Send E-tax';
                 Image = SendElectronicDocument;
                 Promoted = true;
                 PromotedCategory = Process;
