@@ -571,28 +571,26 @@ codeunit 80200 "NCT ETaxFunc"
                     ltTempblob.CreateOutStream(ltOutStream, TextEncoding::UTF8);
                     ltOutStream.WriteText(EtaxData);
                     ltTempblob.CreateInStream(ltInStream, TextEncoding::UTF8);
-                    // if CallEtaxWebservice(0, pSalesInvHeader."No.", ToFileName, ltInStream, NoSeries."NCT Etax Type Code") then begin
-                    //     pSalesInvHeader."NCT Etax Send to E-Tax" := true;
-                    //     pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
-                    //     pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
-                    //     pSalesInvHeader."NCT Etax Send DateTime" := CurrentDateTime();
-                    //     pSalesInvHeader."NCT Etax No. of Send" := pSalesInvHeader."NCT Etax No. of Send" + 1;
-                    //     pSalesInvHeader."NCT Etax Status" := pSalesInvHeader."NCT Etax Status"::Completely;
-                    //     pSalesInvHeader.Modify();
-                    //     CreateToZipFile(StrSubstNo('SalesInvoice_%1', pSalesInvHeader."No."), pSalesInvHeader."No.");
-                    // end else begin
-                    //     pSalesInvHeader."NCT Etax Send to E-Tax" := false;
-                    //     pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
-                    //     pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
-                    //     pSalesInvHeader."NCT Etax Send DateTime" := CurrentDateTime();
-                    //     pSalesInvHeader."NCT Etax No. of Send" := pSalesInvHeader."NCT Etax No. of Send" + 1;
-                    //     pSalesInvHeader."NCT Etax Status" := pSalesInvHeader."NCT Etax Status"::Fail;
-                    //     pSalesInvHeader.Modify();
-                    // end;
-                    CallEtaxWebserviceTEST(0, pSalesInvHeader."No.", ToFileName, ltInStream, NoSeries."NCT Etax Type Code");
+                    if CallEtaxWebservice(0, pSalesInvHeader."No.", ToFileName, ltInStream, NoSeries."NCT Etax Type Code") then begin
+                        pSalesInvHeader."NCT Etax Send to E-Tax" := true;
+                        pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
+                        pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
+                        pSalesInvHeader."NCT Etax Send DateTime" := CurrentDateTime();
+                        pSalesInvHeader."NCT Etax No. of Send" := pSalesInvHeader."NCT Etax No. of Send" + 1;
+                        pSalesInvHeader."NCT Etax Status" := pSalesInvHeader."NCT Etax Status"::Completely;
+                        pSalesInvHeader.Modify();
+                        CreateToZipFile(StrSubstNo('SalesInvoice_%1', pSalesInvHeader."No."), pSalesInvHeader."No.");
+                    end else begin
+                        pSalesInvHeader."NCT Etax Send to E-Tax" := false;
+                        pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
+                        pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
+                        pSalesInvHeader."NCT Etax Send DateTime" := CurrentDateTime();
+                        pSalesInvHeader."NCT Etax No. of Send" := pSalesInvHeader."NCT Etax No. of Send" + 1;
+                        pSalesInvHeader."NCT Etax Status" := pSalesInvHeader."NCT Etax Status"::Fail;
+                        pSalesInvHeader.Modify();
+                    end;
                     CreateLogEtax(pSalesInvHeader."NCT Etax Status");
                 end;
-
             until pSalesInvHeader.Next() = 0;
     end;
     /// <summary>
@@ -1051,123 +1049,6 @@ codeunit 80200 "NCT ETaxFunc"
         DocumentInStream: InStream;
         PdfFileName, TextFileName : Text;
         TenantMedia: Record "Tenant Media";
-
-    begin
-        CR := 13;
-        LF := 10;
-        NewLine := '' + CR + LF;
-        CLEAR(SelectDataDownload);
-        CLEAR(PayloadOutStream);
-        CLEAR(PayloadInStream);
-        CLEAR(DocumentInStream);
-        TextFileName := pfilename + '.txt';
-        PdfFileName := pfilename + '.pdf';
-        Clear(TempBlob);
-
-        CreatePDFReport(pDocumentType, pNo, pInstream, pfilename, pEtaxType);
-
-        if SalesReceivablesSetup."Use My PDF" then begin
-            TempEtaxLog.reset();
-            TenantMedia.GET(TempEtaxLog."Last Pdf File".Item(1));
-            TenantMedia.CalcFields(Content);
-            if TenantMedia.Content.HasValue then
-                TenantMedia.Content.CreateInStream(DocumentInStream);
-        end;
-        UrlAddress := SalesReceivablesSetup."NCT Etax Service URL";
-        ltHttpContent.GetHeaders(HttpHeadersContent);
-        HttpHeadersContent.Clear();
-        HttpHeadersContent.Add('Content-Type', 'multipart/form-data;boundary=D365BC');
-        ltHttpRequestMessage.GetHeaders(HttpHeadersContent);
-        HttpHeadersContent.Add('Authorization', 'Bearer ' + SalesReceivablesSetup."NCT Etax API Key");
-        Clear(TempBlob);
-        TempBlob.CreateOutStream(PayloadOutStream);
-
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
-        PayloadOutStream.WriteText('Content-Disposition: form-data; name="SellerTaxId"' + NewLine);
-        PayloadOutStream.WriteText(NewLine);
-        PayloadOutStream.WriteText(SalesReceivablesSetup."NCT Etax Seller Tax ID" + NewLine);
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
-
-        PayloadOutStream.WriteText('Content-Disposition: form-data; name="SellerBranchId"' + NewLine);
-        PayloadOutStream.WriteText(NewLine);
-        PayloadOutStream.WriteText(SalesReceivablesSetup."NCT Etax Seller Branch ID" + NewLine);
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
-
-        PayloadOutStream.WriteText('Content-Disposition: form-data; name="ServiceCode"' + NewLine);
-        PayloadOutStream.WriteText(NewLine);
-        PayloadOutStream.WriteText(Format(SalesReceivablesSetup."NCT Etax Service Code") + NewLine);
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
-
-        PayloadOutStream.WriteText('Content-Disposition: form-data; name="TextContent"; fileName="' + pfilename + '.txt"' + NewLine);
-        PayloadOutStream.WriteText('Content-Type: application/octet-stream' + NewLine);
-        PayloadOutStream.WriteText(NewLine);
-        CopyStream(PayloadOutStream, pInstream);
-        PayloadOutStream.WriteText(NewLine);
-        PayloadOutStream.WriteText('--D365BC' + NewLine);
-
-        if SalesReceivablesSetup."Use My PDF" then begin
-            PayloadOutStream.WriteText('Content-Disposition: form-data; name="PDFContent"; fileName="' + pfilename + '.pdf"' + NewLine);
-            PayloadOutStream.WriteText('Content-Type: application/octet-stream' + NewLine);
-            PayloadOutStream.WriteText(NewLine);
-            CopyStream(PayloadOutStream, DocumentInStream);
-            PayloadOutStream.WriteText(NewLine);
-            PayloadOutStream.WriteText('--D365BC--' + NewLine);
-        end;
-
-        TempBlob.CreateInStream(PayloadInStream);
-        ltHttpContent.WriteFrom(PayloadInStream);
-        ltHttpRequestMessage.Content := ltHttpContent;
-        ltHttpRequestMessage.SetRequestUri(UrlAddress);
-        ltHttpRequestMessage.Method := 'POST';
-        DSVCHttpClient.Send(ltHttpRequestMessage, ltHttpResponseMessage);
-        ltHttpResponseMessage.Content.ReadAs(ResponseText);
-        if (ltHttpResponseMessage.IsSuccessStatusCode()) then begin
-            CLEAR(SelectDataDownload);
-            ltJsonToken.ReadFrom(ResponseText);
-            ltjsonObject := ltJsonToken.AsObject();
-            CLEAR(InStr);
-            SelectDataDownload[1] := SelectJsonTokenText(ltjsonObject, '$.xmlURL');
-            if Client.Get(SelectDataDownload[1], Response) then begin
-                Response.Content.ReadAs(InStr);
-                Clear(TempEtaxLog."Last XML File");
-                TempEtaxLog."Last XML File".ImportStream(InStr, pfilename + '.xml');
-            end;
-            CLEAR(InStr);
-            SelectDataDownload[2] := SelectJsonTokenText(ltjsonObject, '$.pdfURL');
-            if Client.Get(SelectDataDownload[2], Response) then begin
-                Response.Content.ReadAs(InStr);
-                Clear(TempEtaxLog."Last PDF File");
-                TempEtaxLog."Last PDF File".ImportStream(InStr, pfilename + '.pdf');
-            end;
-            TempEtaxLog.Modify();
-        end else
-            ERROR(ResponseText);
-
-    end;
-
-    local procedure CallEtaxWebserviceTEST(pDocumentType: Option "Sales Invoice","Sales Credit Memo","Sales Receipt"; pNo: code[20]; pfilename: text; pInstream: InStream; pEtaxType: Enum "NCT Etax Type")
-    var
-        TempBlob: Codeunit "Temp Blob";
-        PayloadOutStream: OutStream;
-        PayloadInStream: InStream;
-        UrlAddress: Text[1024];
-        DSVCHttpClient: HttpClient;
-        ltHttpContent: HttpContent;
-        HttpHeadersContent: HttpHeaders;
-        ltHttpRequestMessage: HttpRequestMessage;
-        ltHttpResponseMessage: HttpResponseMessage;
-        Client: HttpClient;
-        Response: HttpResponseMessage;
-        ltJsonToken: JsonToken;
-        ltjsonObject: JsonObject;
-        InStr: InStream;
-        CR: Char;
-        LF: Char;
-        NewLine, ResponseText : Text;
-        SelectDataDownload: array[2] of Text;
-        DocumentInStream: InStream;
-        PdfFileName, TextFileName : Text;
-        TenantMedia: Record "Tenant Media";
         ltStatus: text;
 
     begin
@@ -1244,7 +1125,7 @@ codeunit 80200 "NCT ETaxFunc"
             ltJsonToken.ReadFrom(ResponseText);
             ltjsonObject := ltJsonToken.AsObject();
             ltStatus := SelectJsonTokenText(ltjsonObject, '$.status');
-            if ltStatus = 'OK' then begin
+            if UpperCase(ltStatus) = 'OK' then begin
                 CLEAR(InStr);
                 SelectDataDownload[1] := SelectJsonTokenText(ltjsonObject, '$.xmlURL');
                 if Client.Get(SelectDataDownload[1], Response) then begin
@@ -1259,9 +1140,13 @@ codeunit 80200 "NCT ETaxFunc"
                     Clear(TempEtaxLog."Last PDF File");
                     TempEtaxLog."Last PDF File".ImportStream(InStr, pfilename + '.pdf');
                 end;
-            end else
+                TempEtaxLog.Modify();
+            end else begin
                 TempEtaxLog."NCT Error Msg." := COPYSTR(SelectJsonTokenText(ltjsonObject, '$.errorMessage'), 1, 2047);
-            TempEtaxLog.Modify();
+                TempEtaxLog.Modify();
+                Commit();
+                ERROR('');
+            end;
         end else
             ERROR(ResponseText);
 
