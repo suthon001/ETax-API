@@ -23,6 +23,10 @@ codeunit 80200 "NCT ETaxFunc"
         end;
     end;
 
+    procedure InsertToTable(pRecordID: RecordId; pFieldNo: Integer)
+    begin
+
+    end;
     /// <summary>
     /// ETaxSalesReceip.
     /// </summary>
