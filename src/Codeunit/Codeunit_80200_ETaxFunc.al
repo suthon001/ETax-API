@@ -1069,7 +1069,7 @@ codeunit 80200 "NCT ETaxFunc"
 
         CreatePDFReport(pDocumentType, pNo, pInstream, pfilename, pEtaxType);
 
-        if SalesReceivablesSetup."Use My PDF" then begin
+        if SalesReceivablesSetup."NCT Etax Service Code" = SalesReceivablesSetup."NCT Etax Service Code"::S06 then begin
             TempEtaxLog.reset();
             TenantMedia.GET(TempEtaxLog."Last Pdf File".Item(1));
             TenantMedia.CalcFields(Content);
@@ -1108,7 +1108,7 @@ codeunit 80200 "NCT ETaxFunc"
         PayloadOutStream.WriteText(NewLine);
         PayloadOutStream.WriteText('--D365BC' + NewLine);
 
-        if SalesReceivablesSetup."Use My PDF" then begin
+        if SalesReceivablesSetup."NCT Etax Service Code" = SalesReceivablesSetup."NCT Etax Service Code"::S06 then begin
             PayloadOutStream.WriteText('Content-Disposition: form-data; name="PDFContent"; fileName="' + pfilename + '.pdf"' + NewLine);
             PayloadOutStream.WriteText('Content-Type: application/octet-stream' + NewLine);
             PayloadOutStream.WriteText(NewLine);
@@ -1194,11 +1194,6 @@ codeunit 80200 "NCT ETaxFunc"
         SalesReceivablesSetup.TestField("NCT Etax Seller Branch ID");
         SalesReceivablesSetup.TestField("NCT Etax Seller Tax ID");
         SalesReceivablesSetup.TestField("NCT Etax Service URL");
-        if SalesReceivablesSetup."Use My PDF" then
-            SalesReceivablesSetup.TestField("NCT Etax Service Code", Enum::"NCT Etax Service Type"::S06)
-        else
-            SalesReceivablesSetup.TestField("NCT Etax Service Code", Enum::"NCT Etax Service Type"::S03);
-
     end;
     /// <summary>
     /// CreateToZipFile.

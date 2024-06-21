@@ -12,7 +12,7 @@
             "breakOnError": true,
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,
-            "schemaUpdateMode": "Synchronize",
+            "schemaUpdateMode": "ForceSync",
             "enableSqlInformationDebugger": true,
             "tenant": "ebf48875-962e-4077-b148-dd17c576d9f7"
         }

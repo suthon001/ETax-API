@@ -15,12 +15,12 @@
       "id": "200a5cbc-0ea5-4109-913a-82517e2126d8",
       "publisher": "NET CUBE (THAILAND) CO., LTD.",
       "name": "Thai Localized",
-      "version": "22.0.0.22"
+      "version": "24.0.0.0"
     }
   ],
   "screenshots": [],
   "platform": "1.0.0.0",
-  "application": "22.0.0.0",
+  "application": "24.0.0.0",
   "target": "Cloud",
   "idRanges": [
     {
@@ -33,5 +33,5 @@
     "allowDownloadingSource": false,
     "includeSourceInSymbolFile": false
   },
-  "runtime": "11.0"
+  "runtime": "13.0"
 }

@@ -40,12 +40,7 @@ tableextension 80203 "NCT ETax Sales Setiup" extends "Sales & Receivables Setup"
             Caption = 'Download Text File';
             DataClassification = CustomerContent;
         }
-        field(80207; "Use My PDF"; Boolean)
-        {
-            Caption = 'Use My PDF';
-            DataClassification = CustomerContent;
-        }
-        field(80208; "NCT Etax Download XML File"; Boolean)
+        field(80207; "NCT Etax Download XML File"; Boolean)
         {
             Caption = 'Download XML File';
             DataClassification = CustomerContent;
