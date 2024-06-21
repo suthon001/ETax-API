@@ -46,7 +46,7 @@ pageextension 80207 "NCT Etax Sales Receipt List" extends "NCT Sales Receipt Lis
             action(SendEtax)
             {
                 ApplicationArea = all;
-                Caption = 'E-tax';
+                Caption = 'Send E-tax';
                 Image = SendElectronicDocument;
                 Promoted = true;
                 PromotedCategory = Process;

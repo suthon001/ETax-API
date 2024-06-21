@@ -10,20 +10,10 @@ pageextension 80202 "NCT Etax Sales Setup" extends "Sales & Receivables Setup"
             group(EtaxInformation)
             {
                 Caption = 'E-Tax Information';
-                field("NCT Etax User Code"; rec."NCT Etax User Code")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the User Code field.';
-                }
                 field("NCT Etax API Key"; rec."NCT Etax API Key")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the API Key field.';
-                }
-                field("NCT Etax Access Key"; rec."NCT Etax Access Key")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Access Key field.';
                 }
                 field("NCT Etax Service Code"; rec."NCT Etax Service Code")
                 {
@@ -54,6 +44,16 @@ pageextension 80202 "NCT Etax Sales Setup" extends "Sales & Receivables Setup"
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Download Text File field.';
+                }
+                field("NCT Etax Download XML File"; rec."NCT Etax Download XML File")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Download XML File field.';
+                }
+                field("Use My PDF"; rec."Use My PDF")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Use My PDF field.';
                 }
             }
         }

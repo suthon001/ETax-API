@@ -63,6 +63,11 @@ page 80200 "NCT Etax Log Entry"
                     ToolTip = 'Specifies the value of the Last Text File field.';
                     ApplicationArea = All;
                 }
+                field("NCT Error Msg."; rec."NCT Error Msg.")
+                {
+                    ToolTip = 'Specifies the value of the Error Msg. field.';
+                    ApplicationArea = All;
+                }
             }
         }
     }
@@ -89,13 +94,14 @@ page 80200 "NCT Etax Log Entry"
                     FileMgt: Codeunit "File Management";
                 begin
                     Clear(TempBlob);
-                    TenantMedia.GET(rec."Last Text File".Item(1));
-                    TenantMedia.CalcFields(Content);
-                    if TenantMedia.Content.HasValue then begin
-                        TenantMedia.Content.CreateInStream(DocumentInStream);
-                        TempBlob.CreateOutStream(DocumentOutStream);
-                        CopyStream(DocumentOutStream, DocumentInStream);
-                        FileMgt.BLOBExport(TempBlob, rec."File Name" + '.txt', true);
+                    IF TenantMedia.GET(rec."Last Text File".Item(1)) then begin
+                        TenantMedia.CalcFields(Content);
+                        if TenantMedia.Content.HasValue then begin
+                            TenantMedia.Content.CreateInStream(DocumentInStream);
+                            TempBlob.CreateOutStream(DocumentOutStream);
+                            CopyStream(DocumentOutStream, DocumentInStream);
+                            FileMgt.BLOBExport(TempBlob, rec."File Name" + '.txt', true);
+                        end;
                     end;
                 end;
             }
@@ -118,13 +124,44 @@ page 80200 "NCT Etax Log Entry"
                     FileMgt: Codeunit "File Management";
                 begin
                     Clear(TempBlob);
-                    TenantMedia.GET(rec."Last PDF File".Item(1));
-                    TenantMedia.CalcFields(Content);
-                    if TenantMedia.Content.HasValue then begin
-                        TenantMedia.Content.CreateInStream(DocumentInStream);
-                        TempBlob.CreateOutStream(DocumentOutStream);
-                        CopyStream(DocumentOutStream, DocumentInStream);
-                        FileMgt.BLOBExport(TempBlob, rec."File Name" + '.pdf', true);
+                    if TenantMedia.GET(rec."Last PDF File".Item(1)) then begin
+                        TenantMedia.CalcFields(Content);
+                        if TenantMedia.Content.HasValue then begin
+                            TenantMedia.Content.CreateInStream(DocumentInStream);
+                            TempBlob.CreateOutStream(DocumentOutStream);
+                            CopyStream(DocumentOutStream, DocumentInStream);
+                            FileMgt.BLOBExport(TempBlob, rec."File Name" + '.pdf', true);
+                        end;
+                    end;
+                end;
+            }
+            action(ExportXMLFile)
+            {
+                Caption = 'Export XML File';
+                ApplicationArea = all;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                Image = ExportAttachment;
+                ToolTip = 'Executes the Export XML File action.';
+                trigger OnAction()
+                var
+                    TenantMedia: Record "Tenant Media";
+                    TempBlob: Codeunit "Temp Blob";
+                    DocumentInStream: InStream;
+                    DocumentOutStream: OutStream;
+                    FileMgt: Codeunit "File Management";
+                begin
+                    Clear(TempBlob);
+                    if TenantMedia.GET(rec."Last XML File".Item(1)) then begin
+                        TenantMedia.CalcFields(Content);
+                        if TenantMedia.Content.HasValue then begin
+                            TenantMedia.Content.CreateInStream(DocumentInStream);
+                            TempBlob.CreateOutStream(DocumentOutStream);
+                            CopyStream(DocumentOutStream, DocumentInStream);
+                            FileMgt.BLOBExport(TempBlob, rec."File Name" + '.pdf', true);
+                        end;
                     end;
                 end;
             }

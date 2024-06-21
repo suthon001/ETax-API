@@ -48,7 +48,7 @@ pageextension 80206 "NCT Etax Posted Sales CN Lists" extends "Posted Sales Credi
             action(SendEtax)
             {
                 ApplicationArea = all;
-                Caption = 'E-tax';
+                Caption = 'Send E-tax';
                 Image = SendElectronicDocument;
                 Promoted = true;
                 PromotedCategory = Process;
