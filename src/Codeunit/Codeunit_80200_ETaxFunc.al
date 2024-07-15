@@ -1296,6 +1296,7 @@ codeunit 80200 "NCT ETaxFunc"
         SalesReceivablesSetup.TestField("NCT Etax Seller Tax ID");
         SalesReceivablesSetup.TestField("NCT Etax Service URL");
         SalesReceivablesSetup.TestField("Etax Get check status URL");
+        SalesReceivablesSetup.TestField("Etax Active");
     end;
     /// <summary>
     /// CreateToZipFile.

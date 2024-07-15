@@ -35,6 +35,16 @@ pageextension 80202 "NCT Etax Sales Setup" extends "Sales & Receivables Setup"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Service URL field.';
                 }
+                field("Etax Get check status URL"; rec."Etax Get check status URL")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Etax Get check status URL field.';
+                }
+                field("Etax Active"; rec."Etax Active")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Etax Active field.';
+                }
                 field("NCT Etax Download PDF File"; rec."NCT Etax Download PDF File")
                 {
                     ApplicationArea = all;
