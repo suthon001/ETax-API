@@ -5,6 +5,7 @@ tableextension 80201 "NCT E-Tax Sales Cr.Memo Header" extends "Sales Cr.Memo Hea
 {
     fields
     {
+
         field(80200; "NCT Etax Purpose"; Enum "NCT Etax Purpose")
         {
             Caption = 'E-Tax Purpose';
@@ -13,6 +14,12 @@ tableextension 80201 "NCT E-Tax Sales Cr.Memo Header" extends "Sales Cr.Memo Hea
         field(80201; "NCT Etax Purpose Remark"; text[250])
         {
             Caption = 'E-Tax Purpose Remark';
+            DataClassification = CustomerContent;
+        }
+        field(80244; "Have Email"; Boolean)
+        {
+            Caption = 'Have Email';
+            Editable = false;
             DataClassification = CustomerContent;
         }
         field(80245; "NCT Etax Last File Name"; Text[250])

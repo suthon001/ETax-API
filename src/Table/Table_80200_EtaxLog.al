@@ -12,7 +12,6 @@ table 80200 "NCT Etax Log"
         {
             Caption = 'Document Type';
         }
-
         field(2; "Entry No."; Integer)
         {
             Caption = 'Entry No.';

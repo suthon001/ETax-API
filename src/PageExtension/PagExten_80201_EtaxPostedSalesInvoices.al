@@ -27,6 +27,11 @@ pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoi
                 ApplicationArea = all;
                 ToolTip = 'Specifies the value of the E-tax Last File Name field.';
             }
+            field("Have Email"; rec."Have Email")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the Have Email field.';
+            }
             field("NCT Etax Send By"; rec."NCT Etax Send By")
             {
                 ApplicationArea = all;

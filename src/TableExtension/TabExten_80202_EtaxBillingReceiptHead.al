@@ -5,6 +5,12 @@ tableextension 80202 "NCT Etax Billing Receipt Head." extends "NCT Billing Recei
 {
     fields
     {
+        field(80244; "Have Email"; Boolean)
+        {
+            Caption = 'Have Email';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
         field(80245; "NCT Etax Last File Name"; Text[250])
         {
             Editable = false;

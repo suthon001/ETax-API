@@ -45,6 +45,7 @@ codeunit 80200 "NCT ETaxFunc"
         VatPer: Decimal;
         ltDocumentType: Enum "Etax Document Type";
         TotalAmt: array[100] of Decimal;
+        ltHaveEmail: Boolean;
         CR: Char;
         LF: Char;
     begin
@@ -112,7 +113,7 @@ codeunit 80200 "NCT ETaxFunc"
                     EtaxData := EtaxData + DataText + NewLine;
 
 
-
+                    ltHaveEmail := Cust."E-Mail" <> '';
                     if Cust."NCT Head Office" then
                         ltCustVatBranch := '00000'
                     else
@@ -181,7 +182,7 @@ codeunit 80200 "NCT ETaxFunc"
                             DataText += SetDataEtax('', true); //8
                             DataText += SetDataEtax('', true); //9
                             DataText += SetDataEtax('', true); //10
-                            DataText += SetDataEtax(format(SalesBillingLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), true); //11
+                            DataText += SetDataEtax(DelChr(format(SalesBillingLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true); //11
                             DataText += SetDataEtax(CurrencyCode, true); //12
                             DataText += SetDataEtax('', true); //13
                             DataText += SetDataEtax('', true); //14
@@ -192,21 +193,21 @@ codeunit 80200 "NCT ETaxFunc"
                             DataText += SetDataEtax('', true); //19
                             DataText += SetDataEtax('', true); //20
                             DataText += SetDataEtax('VAT', true); //21
-                            DataText += SetDataEtax(format(SalesBillingLine."Vat %", 0, '<Precision,2:2><Standard Format,0>'), true); //22
-                            DataText += SetDataEtax(format(SalesBillingLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesBillingLine."Vat %", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true); //22
+                            DataText += SetDataEtax(DelChr(format(SalesBillingLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
-                            DataText += SetDataEtax(format(SalesBillingLine.Amount - SalesBillingLine."Amount Exclude Vat", 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesBillingLine.Amount - SalesBillingLine."Amount Exclude Vat", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax('', true);
-                            DataText += SetDataEtax(format(SalesBillingLine.Amount - SalesBillingLine."Amount Exclude Vat", 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesBillingLine.Amount - SalesBillingLine."Amount Exclude Vat", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
-                            DataText += SetDataEtax(format(SalesBillingLine."Amount Exclude Vat", 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesBillingLine."Amount Exclude Vat", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
-                            DataText += SetDataEtax(format(SalesBillingLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesBillingLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             if TotalSalesReceiptLine <> LineNo then
                                 DataText += SetDataEtax(CurrencyCode, true)
                             else
@@ -230,10 +231,10 @@ codeunit 80200 "NCT ETaxFunc"
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax(CurrencyCode, true);
                     DataText += SetDataEtax('VAT', true);
-                    DataText += SetDataEtax(format(VatPer, 0, '<Precision,2:2><Standard Format,0>'), true);
-                    DataText += SetDataEtax(format(TotalAmt[1], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(VatPer, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[1], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
-                    DataText += SetDataEtax(format(TotalAmt[4], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[4], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
@@ -253,11 +254,11 @@ codeunit 80200 "NCT ETaxFunc"
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
-                    DataText += SetDataEtax(format(TotalAmt[3], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[3], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
-                    DataText += SetDataEtax(format(TotalAmt[4], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[4], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
-                    DataText += SetDataEtax(format(TotalAmt[5], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[5], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, false);
                     EtaxData := EtaxData + DataText + NewLine;
                     DataText := SetDataEtax('T', True);
@@ -268,20 +269,22 @@ codeunit 80200 "NCT ETaxFunc"
                     ltTempblob.CreateInStream(ltInStream, TextEncoding::UTF8);
                     if CallEtaxWebservice(ltDocumentType::"Sales Receipt", pSalesReceipt."No.", ToFileName, ltInStream, pEtaxType) then begin
                         pSalesReceipt."NCT Etax Send to E-Tax" := true;
-                        pSalesReceipt."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
-                        pSalesReceipt."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
+                        pSalesReceipt."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, MaxStrLen(pSalesReceipt."NCT Etax Last File Name"));
+                        pSalesReceipt."NCT Etax Send By" := COPYSTR(USERID, 1, MaxStrLen(pSalesReceipt."NCT Etax Send By"));
                         pSalesReceipt."NCT Etax Send DateTime" := CurrentDateTime();
                         pSalesReceipt."NCT Etax No. of Send" := pSalesReceipt."NCT Etax No. of Send" + 1;
                         pSalesReceipt."NCT Etax Status" := pSalesReceipt."NCT Etax Status"::Completely;
+                        pSalesReceipt."Have Email" := ltHaveEmail;
                         pSalesReceipt.Modify();
                         CreateToZipFile(StrSubstNo('SalesReceipt_%1', pSalesReceipt."No."), pSalesReceipt."No.");
                     end else begin
                         pSalesReceipt."NCT Etax Send to E-Tax" := false;
-                        pSalesReceipt."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
-                        pSalesReceipt."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
+                        pSalesReceipt."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, MaxStrLen(pSalesReceipt."NCT Etax Last File Name"));
+                        pSalesReceipt."NCT Etax Send By" := COPYSTR(USERID, 1, MaxStrLen(pSalesReceipt."NCT Etax Send By"));
                         pSalesReceipt."NCT Etax Send DateTime" := CurrentDateTime();
                         pSalesReceipt."NCT Etax No. of Send" := pSalesReceipt."NCT Etax No. of Send" + 1;
                         pSalesReceipt."NCT Etax Status" := pSalesReceipt."NCT Etax Status"::Fail;
+                        pSalesReceipt."Have Email" := ltHaveEmail;
                         pSalesReceipt.Modify();
                     end;
                     CreateLogEtax(pSalesReceipt."NCT Etax Status");
@@ -313,6 +316,7 @@ codeunit 80200 "NCT ETaxFunc"
         VatPer, TotalLineDisAmt : Decimal;
         TotalAmt: array[100] of Decimal;
         ltDocumentType: Enum "Etax Document Type";
+        ltHaveEmail: Boolean;
         CR: Char;
         LF: Char;
     begin
@@ -379,6 +383,7 @@ codeunit 80200 "NCT ETaxFunc"
                     else
                         DataText += SetDataEtax('N', false);
                     EtaxData := EtaxData + DataText + NewLine;
+                    ltHaveEmail := Cust."E-Mail" <> '';
 
                     if not Cust.GET(pSalesInvHeader."Bill-to Customer No.") then
                         Cust.Init();
@@ -458,10 +463,10 @@ codeunit 80200 "NCT ETaxFunc"
                             DataText += SetDataEtax(ltItem."Item Category Code", true); //8
                             DataText += SetDataEtax(Itemcategory.Description, true); //9
                             DataText += SetDataEtax('', true); //10
-                            DataText += SetDataEtax(format(SalesInvoiceLine."Unit Price", 0, '<Precision,2:2><Standard Format,0>'), true); //11
+                            DataText += SetDataEtax(DelChr(format(SalesInvoiceLine."Unit Price", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true); //11
                             DataText += SetDataEtax(CurrencyCode, true); //12
                             DataText += SetDataEtax('', true); //13
-                            DataText += SetDataEtax(format(SalesInvoiceLine."Line Discount Amount", 0, '<Precision,2:2><Standard Format,0>'), true); //14
+                            DataText += SetDataEtax(DelChr(format(SalesInvoiceLine."Line Discount Amount", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true); //14
                             if SalesInvoiceLine."Line Discount Amount" <> 0 then
                                 DataText += SetDataEtax(CurrencyCode, true)
                             else
@@ -470,23 +475,23 @@ codeunit 80200 "NCT ETaxFunc"
                             DataText += SetDataEtax('', true); //17
                             DataText += SetDataEtax(format(SalesInvoiceLine.Quantity), true); //18
                             DataText += SetDataEtax(SalesInvoiceLine."Unit of Measure Code", true); //19
-                            DataText += SetDataEtax(format(SalesInvoiceLine."Qty. per Unit of Measure", 0, '<Precision,2:2><Standard Format,0>'), true); //20
+                            DataText += SetDataEtax(DelChr(format(SalesInvoiceLine."Qty. per Unit of Measure", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true); //20
                             DataText += SetDataEtax('VAT', true); //21
-                            DataText += SetDataEtax(format(SalesInvoiceLine."VAT %", 0, '<Precision,2:2><Standard Format,0>'), true); //22
-                            DataText += SetDataEtax(format(SalesInvoiceLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesInvoiceLine."VAT %", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true); //22
+                            DataText += SetDataEtax(DelChr(format(SalesInvoiceLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
-                            DataText += SetDataEtax(format(SalesInvoiceLine."Amount Including VAT" - SalesInvoiceLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesInvoiceLine."Amount Including VAT" - SalesInvoiceLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax('', true);
-                            DataText += SetDataEtax(format(SalesInvoiceLine."Amount Including VAT" - SalesInvoiceLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesInvoiceLine."Amount Including VAT" - SalesInvoiceLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
-                            DataText += SetDataEtax(format(SalesInvoiceLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesInvoiceLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
-                            DataText += SetDataEtax(format(SalesInvoiceLine."Amount Including VAT", 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesInvoiceLine."Amount Including VAT", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             if TotalSalesInvoiceLine <> LineNo then
                                 DataText += SetDataEtax(CurrencyCode, true)
                             else
@@ -516,10 +521,10 @@ codeunit 80200 "NCT ETaxFunc"
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax(CurrencyCode, true);
                     DataText += SetDataEtax('VAT', true);
-                    DataText += SetDataEtax(format(VatPer, 0, '<Precision,2:2><Standard Format,0>'), true);
-                    DataText += SetDataEtax(format(TotalAmt[1], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(VatPer, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[1], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
-                    DataText += SetDataEtax(format(TotalAmt[4], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[4], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
@@ -539,11 +544,11 @@ codeunit 80200 "NCT ETaxFunc"
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
-                    DataText += SetDataEtax(format(TotalAmt[3], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[3], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
-                    DataText += SetDataEtax(format(TotalAmt[4], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[4], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
-                    DataText += SetDataEtax(format(TotalAmt[5], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[5], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, false);
                     EtaxData := EtaxData + DataText + NewLine;
                     DataText := SetDataEtax('T', True);
@@ -554,20 +559,22 @@ codeunit 80200 "NCT ETaxFunc"
                     ltTempblob.CreateInStream(ltInStream, TextEncoding::UTF8);
                     if CallEtaxWebservice(ltDocumentType::"Sales Invoice", pSalesInvHeader."No.", ToFileName, ltInStream, pEtaxType) then begin
                         pSalesInvHeader."NCT Etax Send to E-Tax" := true;
-                        pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
-                        pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
+                        pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, MaxStrLen(pSalesInvHeader."NCT Etax Last File Name"));
+                        pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, MaxStrLen(pSalesInvHeader."NCT Etax Send By"));
                         pSalesInvHeader."NCT Etax Send DateTime" := CurrentDateTime();
                         pSalesInvHeader."NCT Etax No. of Send" := pSalesInvHeader."NCT Etax No. of Send" + 1;
                         pSalesInvHeader."NCT Etax Status" := pSalesInvHeader."NCT Etax Status"::Completely;
+                        pSalesInvHeader."Have Email" := ltHaveEmail;
                         pSalesInvHeader.Modify();
                         CreateToZipFile(StrSubstNo('SalesInvoice_%1', pSalesInvHeader."No."), pSalesInvHeader."No.");
                     end else begin
                         pSalesInvHeader."NCT Etax Send to E-Tax" := false;
-                        pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
-                        pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
+                        pSalesInvHeader."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, MaxStrLen(pSalesInvHeader."NCT Etax Last File Name"));
+                        pSalesInvHeader."NCT Etax Send By" := COPYSTR(USERID, 1, MaxStrLen(pSalesInvHeader."NCT Etax Send By"));
                         pSalesInvHeader."NCT Etax Send DateTime" := CurrentDateTime();
                         pSalesInvHeader."NCT Etax No. of Send" := pSalesInvHeader."NCT Etax No. of Send" + 1;
                         pSalesInvHeader."NCT Etax Status" := pSalesInvHeader."NCT Etax Status"::Fail;
+                        pSalesInvHeader."Have Email" := ltHaveEmail;
                         pSalesInvHeader.Modify();
                     end;
                     CreateLogEtax(pSalesInvHeader."NCT Etax Status");
@@ -603,6 +610,7 @@ codeunit 80200 "NCT ETaxFunc"
         VatPer, TotalLineDisAmt : Decimal;
         TotalAmt: array[100] of Decimal;
         ltDocumentType: Enum "Etax Document Type";
+        ltHaveEmail: Boolean;
         CR: Char;
         LF: Char;
     begin
@@ -685,7 +693,7 @@ codeunit 80200 "NCT ETaxFunc"
                     else
                         DataText += SetDataEtax('N', false);
                     EtaxData := EtaxData + DataText + NewLine;
-
+                    ltHaveEmail := Cust."E-Mail" <> '';
                     if not Cust.GET(pSalesCreditMemo."Bill-to Customer No.") then
                         Cust.Init();
 
@@ -764,10 +772,10 @@ codeunit 80200 "NCT ETaxFunc"
                             DataText += SetDataEtax(ltItem."Item Category Code", true);
                             DataText += SetDataEtax(Itemcategory.Description, true);
                             DataText += SetDataEtax('', true);
-                            DataText += SetDataEtax(format(SalesCreditMemoLine."Unit Price", 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesCreditMemoLine."Unit Price", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
                             DataText += SetDataEtax('', true);
-                            DataText += SetDataEtax(format(SalesCreditMemoLine."Line Discount Amount", 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesCreditMemoLine."Line Discount Amount", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             if SalesCreditMemoLine."Line Discount Amount" <> 0 then
                                 DataText += SetDataEtax(CurrencyCode, true)
                             else
@@ -776,23 +784,23 @@ codeunit 80200 "NCT ETaxFunc"
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax(format(SalesCreditMemoLine.Quantity), true);
                             DataText += SetDataEtax(SalesCreditMemoLine."Unit of Measure Code", true);
-                            DataText += SetDataEtax(format(SalesCreditMemoLine."Qty. per Unit of Measure", 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesCreditMemoLine."Qty. per Unit of Measure", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax('VAT', true); //21
-                            DataText += SetDataEtax(format(SalesCreditMemoLine."VAT %", 0, '<Precision,2:2><Standard Format,0>'), true);
-                            DataText += SetDataEtax(format(SalesCreditMemoLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesCreditMemoLine."VAT %", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
+                            DataText += SetDataEtax(DelChr(format(SalesCreditMemoLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
-                            DataText += SetDataEtax(format(SalesCreditMemoLine."Amount Including VAT" - SalesCreditMemoLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesCreditMemoLine."Amount Including VAT" - SalesCreditMemoLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax('', true);
                             DataText += SetDataEtax('', true);
-                            DataText += SetDataEtax(format(SalesCreditMemoLine."Amount Including VAT" - SalesCreditMemoLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesCreditMemoLine."Amount Including VAT" - SalesCreditMemoLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
-                            DataText += SetDataEtax(format(SalesCreditMemoLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesCreditMemoLine.Amount, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             DataText += SetDataEtax(CurrencyCode, true);
-                            DataText += SetDataEtax(format(SalesCreditMemoLine."Amount Including VAT", 0, '<Precision,2:2><Standard Format,0>'), true);
+                            DataText += SetDataEtax(DelChr(format(SalesCreditMemoLine."Amount Including VAT", 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                             if TotalSalesCreditLine <> LineNo then
                                 DataText += SetDataEtax(CurrencyCode, true)
                             else
@@ -840,10 +848,10 @@ codeunit 80200 "NCT ETaxFunc"
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax(CurrencyCode, true);
                     DataText += SetDataEtax('VAT', true);
-                    DataText += SetDataEtax(format(VatPer, 0, '<Precision,2:2><Standard Format,0>'), true);
-                    DataText += SetDataEtax(format(TotalAmt[1], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(VatPer, 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[1], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
-                    DataText += SetDataEtax(format(TotalAmt[4], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[4], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
@@ -853,9 +861,9 @@ codeunit 80200 "NCT ETaxFunc"
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax(PaymentTerms.Description, true);
                     DataText += SetDataEtax(format(pSalesCreditMemo."Due Date", 0, '<Year4>-<Month,2>-<Day,2>') + 'T00:00:00', true);
-                    DataText += SetDataEtax(format(TotalAmt[99], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[99], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
-                    DataText += SetDataEtax(format(TotalAmt[100], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[100], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
@@ -863,11 +871,11 @@ codeunit 80200 "NCT ETaxFunc"
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
                     DataText += SetDataEtax('', true);
-                    DataText += SetDataEtax(format(TotalAmt[3], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[3], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
-                    DataText += SetDataEtax(format(TotalAmt[4], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[4], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, true);
-                    DataText += SetDataEtax(format(TotalAmt[5], 0, '<Precision,2:2><Standard Format,0>'), true);
+                    DataText += SetDataEtax(DelChr(format(TotalAmt[5], 0, '<Precision,2:2><Standard Format,0>'), '=', ','), true);
                     DataText += SetDataEtax(CurrencyCode, false);
                     EtaxData := EtaxData + DataText + NewLine;
                     DataText := SetDataEtax('T', True);
@@ -878,20 +886,22 @@ codeunit 80200 "NCT ETaxFunc"
                     ltTempblob.CreateInStream(ltInStream, TextEncoding::UTF8);
                     if CallEtaxWebservice(ltDocumentType::"Sales Credit Memo", pSalesCreditMemo."No.", ToFileName, ltInStream, pEtaxType) then begin
                         pSalesCreditMemo."NCT Etax Send to E-Tax" := true;
-                        pSalesCreditMemo."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
-                        pSalesCreditMemo."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
+                        pSalesCreditMemo."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, MaxStrLen(pSalesCreditMemo."NCT Etax Last File Name"));
+                        pSalesCreditMemo."NCT Etax Send By" := COPYSTR(USERID, 1, MaxStrLen(pSalesCreditMemo."NCT Etax Send By"));
                         pSalesCreditMemo."NCT Etax Send DateTime" := CurrentDateTime();
                         pSalesCreditMemo."NCT Etax No. of Send" := pSalesCreditMemo."NCT Etax No. of Send" + 1;
                         pSalesCreditMemo."NCT Etax Status" := pSalesCreditMemo."NCT Etax Status"::Completely;
+                        pSalesCreditMemo."Have Email" := ltHaveEmail;
                         pSalesCreditMemo.Modify();
                         CreateToZipFile(StrSubstNo('SalesCreditMemo_%1', pSalesCreditMemo."No."), pSalesCreditMemo."No.");
                     end else begin
                         pSalesCreditMemo."NCT Etax Send to E-Tax" := false;
-                        pSalesCreditMemo."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, 250);
-                        pSalesCreditMemo."NCT Etax Send By" := COPYSTR(USERID, 1, 30);
+                        pSalesCreditMemo."NCT Etax Last File Name" := COPYSTR(ltFileName, 1, MaxStrLen(pSalesCreditMemo."NCT Etax Last File Name"));
+                        pSalesCreditMemo."NCT Etax Send By" := COPYSTR(USERID, 1, MaxStrLen(pSalesCreditMemo."NCT Etax Send By"));
                         pSalesCreditMemo."NCT Etax Send DateTime" := CurrentDateTime();
                         pSalesCreditMemo."NCT Etax No. of Send" := pSalesCreditMemo."NCT Etax No. of Send" + 1;
                         pSalesCreditMemo."NCT Etax Status" := pSalesCreditMemo."NCT Etax Status"::Fail;
+                        pSalesCreditMemo."Have Email" := ltHaveEmail;
                         pSalesCreditMemo.Modify();
                     end;
                     CreateLogEtax(pSalesCreditMemo."NCT Etax Status");

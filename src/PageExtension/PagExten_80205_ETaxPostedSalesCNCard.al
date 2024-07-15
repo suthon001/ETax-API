@@ -40,6 +40,11 @@ pageextension 80205 "NCT ETax Posted Sales CN Card" extends "Posted Sales Credit
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the E-tax Last File Name field.';
                 }
+                field("Have Email"; rec."Have Email")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Have Email field.';
+                }
                 field("NCT Etax Send By"; rec."NCT Etax Send By")
                 {
                     ApplicationArea = all;
