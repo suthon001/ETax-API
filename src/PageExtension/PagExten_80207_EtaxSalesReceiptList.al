@@ -48,26 +48,28 @@ pageextension 80207 "NCT Etax Sales Receipt List" extends "NCT Sales Receipt Lis
                 ApplicationArea = all;
                 Caption = 'Send E-tax';
                 Image = SendElectronicDocument;
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                PromotedOnly = true;
                 ToolTip = 'Executes the Etax action.';
                 trigger OnAction()
                 var
-                    EtaxFunc: Codeunit "NCT ETaxFunc";
+                    //  EtaxFunc: Codeunit "NCT ETaxFunc";
                     SalesReceipt: record "NCT Billing Receipt Header";
 
                 begin
 
-                    SalesReceipt.Copy(rec);
-                    CurrPage.SetSelectionFilter(SalesReceipt);
-                    SalesReceipt.SetRange("NCT Etax Send to E-Tax", false);
-                    SalesReceipt.SetRange(Status, SalesReceipt.Status::Posted);
-                    SalesReceipt.SetFilter(Amount, '<>%1', 0);
-                    if not confirm(StrSubstNo('Do you want Send to E-tax %1 record', SalesReceipt.Count)) then
+                    // SalesReceipt.Copy(rec);
+                    // CurrPage.SetSelectionFilter(SalesReceipt);
+                    // SalesReceipt.SetRange("NCT Etax Send to E-Tax", false);
+                    // SalesReceipt.SetRange(Status, SalesReceipt.Status::Posted);
+                    // SalesReceipt.SetFilter(Amount, '<>%1', 0);
+                    // if not confirm(StrSubstNo('Do you want Send to E-tax %1 record', SalesReceipt.Count)) then
+                    //     exit;
+                    // EtaxFunc.ETaxSalesReceip(SalesReceipt);
+                    rec.TestField("NCT Etax Send to E-Tax", false);
+                    if not confirm(StrSubstNo('Do you want Send Document No. %1 to E-tax', rec."No.")) then
                         exit;
-                    EtaxFunc.ETaxSalesReceip(SalesReceipt);
+                    SalesReceipt.reset();
+                    SalesReceipt.SetRange("No.", rec."No.");
+                    REPORT.RUNMODAL(REPORT::"Etax Select Header Receipt", TRUE, FALSE, SalesReceipt);
                 end;
             }
             action(EtaxLog)
@@ -75,10 +77,7 @@ pageextension 80207 "NCT Etax Sales Receipt List" extends "NCT Sales Receipt Lis
                 ApplicationArea = all;
                 Caption = 'E-tax (Log)';
                 Image = SendElectronicDocument;
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                PromotedOnly = true;
+
                 ToolTip = 'Executes the Etax (Log) action.';
                 trigger OnAction()
                 var
@@ -93,6 +92,20 @@ pageextension 80207 "NCT Etax Sales Receipt List" extends "NCT Sales Receipt Lis
                     EtaxLogEntry.Run();
                     CLEAR(EtaxLogEntry);
                 end;
+            }
+        }
+        modify(Category_Category18)
+        {
+            Caption = 'E-Tax';
+        }
+        addfirst(Category_Category18)
+        {
+
+            actionref(SendEtax_Promoted; SendEtax)
+            {
+            }
+            actionref(EtaxLog_Promoted; EtaxLog)
+            {
             }
         }
     }

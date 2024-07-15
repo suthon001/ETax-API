@@ -48,25 +48,27 @@ pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoi
                 ApplicationArea = all;
                 Caption = 'Send E-tax';
                 Image = SendElectronicDocument;
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                PromotedOnly = true;
                 ToolTip = 'Executes the Etax action.';
                 trigger OnAction()
                 var
-                    EtaxFunc: Codeunit "NCT ETaxFunc";
+                    //   EtaxFunc: Codeunit "NCT ETaxFunc";
                     SalesInvoice: record "Sales Invoice Header";
 
                 begin
 
-                    SalesInvoice.Copy(rec);
-                    CurrPage.SetSelectionFilter(SalesInvoice);
-                    SalesInvoice.SetRange("NCT Etax Send to E-Tax", false);
-                    SalesInvoice.SetFilter(Amount, '<>%1', 0);
-                    if not confirm(StrSubstNo('Do you want Send to E-tax %1 record', SalesInvoice.Count)) then
+                    // SalesInvoice.Copy(rec);
+                    // CurrPage.SetSelectionFilter(SalesInvoice);
+                    // SalesInvoice.SetRange("NCT Etax Send to E-Tax", false);
+                    // SalesInvoice.SetFilter(Amount, '<>%1', 0);
+                    // if not confirm(StrSubstNo('Do you want Send to E-tax %1 record', SalesInvoice.Count)) then
+                    //     exit;
+                    // EtaxFunc.ETaxSalesInvoice(SalesInvoice);
+                    rec.TestField("NCT Etax Send to E-Tax", false);
+                    if not confirm(StrSubstNo('Do you want Send Document No. %1 to E-tax', rec."No.")) then
                         exit;
-                    EtaxFunc.ETaxSalesInvoice(SalesInvoice);
+                    SalesInvoice.reset();
+                    SalesInvoice.SetRange("No.", rec."No.");
+                    REPORT.RUNMODAL(REPORT::"Etax Select Header Invoice", TRUE, FALSE, SalesInvoice);
                 end;
             }
             action(EtaxLog)
@@ -74,10 +76,6 @@ pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoi
                 ApplicationArea = all;
                 Caption = 'E-tax (Log)';
                 Image = SendElectronicDocument;
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                PromotedOnly = true;
                 ToolTip = 'Executes the Etax (Log) action.';
                 trigger OnAction()
                 var
@@ -94,5 +92,20 @@ pageextension 80201 "NCT Etax Posted Sales Invoices" extends "Posted Sales Invoi
                 end;
             }
         }
+        modify(Category_Category18)
+        {
+            Caption = 'E-Tax';
+        }
+        addfirst(Category_Category18)
+        {
+
+            actionref(SendEtax_Promoted; SendEtax)
+            {
+            }
+            actionref(EtaxLog_Promoted; EtaxLog)
+            {
+            }
+        }
     }
 }
+

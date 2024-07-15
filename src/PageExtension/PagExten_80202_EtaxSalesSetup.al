@@ -39,16 +39,19 @@ pageextension 80202 "NCT Etax Sales Setup" extends "Sales & Receivables Setup"
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Download PDF File field.';
+                    Visible = false;
                 }
                 field("NCT Etax Download Text File"; rec."NCT Etax Download Text File")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Download Text File field.';
+                    Visible = false;
                 }
                 field("NCT Etax Download XML File"; rec."NCT Etax Download XML File")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Download XML File field.';
+                    Visible = false;
                 }
             }
         }

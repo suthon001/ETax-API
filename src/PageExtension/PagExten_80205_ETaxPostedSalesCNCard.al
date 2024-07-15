@@ -62,19 +62,17 @@ pageextension 80205 "NCT ETax Posted Sales CN Card" extends "Posted Sales Credit
                 ApplicationArea = all;
                 Caption = 'Send E-tax';
                 Image = SendElectronicDocument;
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                PromotedOnly = true;
+
                 ToolTip = 'Executes the Etax action.';
                 trigger OnAction()
                 var
                     EtaxFunc: Codeunit "NCT ETaxFunc";
+                    EtaxType: Enum "NCT Etax Type";
                 begin
                     rec.TestField("NCT Etax Send to E-Tax", false);
                     if not confirm(StrSubstNo('Do you want Send Document No. %1 to E-tax', rec."No.")) then
                         exit;
-                    EtaxFunc.ETaxSalesCreditMemo(rec);
+                    EtaxFunc.ETaxSalesCreditMemo(rec, EtaxType::"81");
                 end;
             }
             action(EtaxLog)
@@ -82,10 +80,7 @@ pageextension 80205 "NCT ETax Posted Sales CN Card" extends "Posted Sales Credit
                 ApplicationArea = all;
                 Caption = 'E-tax (Log)';
                 Image = SendElectronicDocument;
-                Promoted = true;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
-                PromotedOnly = true;
+
                 ToolTip = 'Executes the Etax (Log) action.';
                 trigger OnAction()
                 var
@@ -100,6 +95,20 @@ pageextension 80205 "NCT ETax Posted Sales CN Card" extends "Posted Sales Credit
                     EtaxLogEntry.Run();
                     CLEAR(EtaxLogEntry);
                 end;
+            }
+        }
+        modify(Category_Category18)
+        {
+            Caption = 'E-Tax';
+        }
+        addfirst(Category_Category18)
+        {
+
+            actionref(SendEtax_Promoted; SendEtax)
+            {
+            }
+            actionref(EtaxLog_Promoted; EtaxLog)
+            {
             }
         }
     }

@@ -2,11 +2,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Sandbox01",
+            "name": "TAK",
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
-            "environmentName": "Sandbox001",
+            "environmentName": "TAK",
             "startupObjectId": 143,
             "startupObjectType": "Page",
             "breakOnError": true,

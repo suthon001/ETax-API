@@ -8,15 +8,14 @@ table 80200 "NCT Etax Log"
 
     fields
     {
-        field(1; "Entry No."; Integer)
-        {
-            Caption = 'Entry No.';
-        }
-        field(2; "Document Type"; Option)
+        field(1; "Document Type"; Enum "Etax Document Type")
         {
             Caption = 'Document Type';
-            OptionCaption = 'Sales Invoice,Sales Credit Memo,Sales Receipt';
-            OptionMembers = "Sales Invoice","Sales Credit Memo","Sales Receipt";
+        }
+
+        field(2; "Entry No."; Integer)
+        {
+            Caption = 'Entry No.';
         }
         field(3; "Document No."; Code[20])
         {
@@ -60,10 +59,24 @@ table 80200 "NCT Etax Log"
         {
             Caption = 'Last XML File';
         }
+        field(13; "Header Report"; text[100])
+        {
+            Caption = 'Header Report';
+            Editable = false;
+        }
+        field(14; "Transaction Code"; text[100])
+        {
+            Caption = 'Transaction Code';
+            Editable = false;
+        }
+        field(15; "Etax Type Code"; code[20])
+        {
+            Caption = 'Etax Type Code';
+        }
     }
     keys
     {
-        key(PK; "Entry No.")
+        key(PK; "Document Type", "Entry No.")
         {
             Clustered = true;
         }
@@ -77,7 +90,8 @@ table 80200 "NCT Etax Log"
         LogEtax: Record "NCT Etax Log";
     begin
         LogEtax.Reset();
-        LogEtax.SetCurrentKey("Entry No.");
+        LogEtax.SetCurrentKey("Document Type", "Entry No.");
+        LogEtax.SetRange("Document Type", rec."Document Type");
         if LogEtax.FindLast() then
             exit(LogEtax."Entry No." + 1);
         exit(1);
