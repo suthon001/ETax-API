@@ -64,9 +64,8 @@ pageextension 80207 "NCT Etax Sales Receipt List" extends "NCT Sales Receipt Lis
                     // if not confirm(StrSubstNo('Do you want Send to E-tax %1 record', SalesReceipt.Count)) then
                     //     exit;
                     // EtaxFunc.ETaxSalesReceip(SalesReceipt);
+                    rec.TestField(Status, rec.Status::Posted);
                     rec.TestField("NCT Etax Send to E-Tax", false);
-                    if not confirm(StrSubstNo('Do you want Send Document No. %1 to E-tax', rec."No.")) then
-                        exit;
                     SalesReceipt.reset();
                     SalesReceipt.SetRange("No.", rec."No.");
                     REPORT.RUNMODAL(REPORT::"Etax Select Header Receipt", TRUE, FALSE, SalesReceipt);

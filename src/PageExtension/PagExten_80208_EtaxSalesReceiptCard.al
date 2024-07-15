@@ -59,8 +59,6 @@ pageextension 80208 "NCT Etax Sales Receipt Card" extends "NCT Sales Receipt Car
                 begin
                     rec.TestField(Status, rec.Status::Posted);
                     rec.TestField("NCT Etax Send to E-Tax", false);
-                    if not confirm(StrSubstNo('Do you want Send Document No. %1 to E-tax', rec."No.")) then
-                        exit;
                     SalesReceipt.reset();
                     SalesReceipt.SetRange("No.", rec."No.");
                     REPORT.RUNMODAL(REPORT::"Etax Select Header Receipt", TRUE, FALSE, SalesReceipt);

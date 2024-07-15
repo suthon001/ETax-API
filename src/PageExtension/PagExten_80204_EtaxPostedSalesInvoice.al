@@ -59,8 +59,6 @@ pageextension 80204 "NCT Etax Posted Sales Invoice" extends "Posted Sales Invoic
                     SalesInvoice: Record "Sales Invoice Header";
                 begin
                     rec.TestField("NCT Etax Send to E-Tax", false);
-                    if not confirm(StrSubstNo('Do you want Send Document No. %1 to E-tax', rec."No.")) then
-                        exit;
                     SalesInvoice.reset();
                     SalesInvoice.SetRange("No.", rec."No.");
                     REPORT.RUNMODAL(REPORT::"Etax Select Header Invoice", TRUE, FALSE, SalesInvoice);
