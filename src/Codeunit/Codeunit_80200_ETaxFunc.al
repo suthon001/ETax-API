@@ -4,6 +4,25 @@
 codeunit 80200 "NCT ETaxFunc"
 {
     Permissions = tabledata "Sales Invoice Header" = rm, tabledata "Sales Cr.Memo Header" = rm, tabledata "NCT Billing Receipt Header" = rm;
+    [EventSubscriber(ObjectType::page, page::"Pstd. Sales Cr. Memo - Update", 'OnAfterRecordChanged', '', false, false)]
+    local procedure OnAfterRecordChanged(var IsChanged: Boolean; var SalesCrMemoHeader: Record "Sales Cr.Memo Header"; xSalesCrMemoHeader: Record "Sales Cr.Memo Header")
+    begin
+        IsChanged :=
+                 (SalesCrMemoHeader."Shipping Agent Code" <> xSalesCrMemoHeader."Shipping Agent Code") or
+                 (SalesCrMemoHeader."Shipping Agent Service Code" <> xSalesCrMemoHeader."Shipping Agent Service Code") or
+                 (SalesCrMemoHeader."Package Tracking No." <> xSalesCrMemoHeader."Package Tracking No.") or
+                 (SalesCrMemoHeader."Company Bank Account Code" <> xSalesCrMemoHeader."Company Bank Account Code") or
+                 (SalesCrMemoHeader."Posting Description" <> xSalesCrMemoHeader."Posting Description") or
+                  (SalesCrMemoHeader."NCT Etax Purpose" <> xSalesCrMemoHeader."NCT Etax Purpose") or
+                   (SalesCrMemoHeader."NCT Etax Purpose Remark" <> xSalesCrMemoHeader."NCT Etax Purpose Remark");
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales Credit Memo Hdr. - Edit", 'OnBeforeSalesCrMemoHeaderModify', '', false, false)]
+    local procedure OnBeforeSalesCrMemoHeaderModify(FromSalesCrMemoHeader: Record "Sales Cr.Memo Header"; var SalesCrMemoHeader: Record "Sales Cr.Memo Header")
+    begin
+        SalesCrMemoHeader."NCT Etax Purpose" := FromSalesCrMemoHeader."NCT Etax Purpose";
+        SalesCrMemoHeader."NCT Etax Purpose Remark" := FromSalesCrMemoHeader."NCT Etax Purpose Remark";
+    end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Sales Document", 'OnBeforeReleaseSalesDoc', '', false, false)]
     local procedure OnBeforeReleaseSalesDoc(var SalesHeader: Record "Sales Header")
